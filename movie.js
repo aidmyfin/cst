@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM loaded, initializing movie page...")
   initializeMoviePage()
   initializeTabs()
+  initializeVideoPlayer()
 })
 
 function initializeMoviePage() {
@@ -653,6 +654,77 @@ function downloadEpisode(episodeIndex) {
 }
 
 // Enhanced In-Page Video Player Functions
+function initializeVideoPlayer() {
+  console.log("Initializing in-page video player...")
+
+  // Create video player modal structure
+  createVideoPlayerModal()
+}
+
+function createVideoPlayerModal() {
+  // Remove existing player if it exists
+  const existingPlayer = document.getElementById("video-player-modal")
+  if (existingPlayer) {
+    existingPlayer.remove()
+  }
+
+  const playerModal = document.createElement("div")
+  playerModal.id = "video-player-modal"
+  playerModal.className = "video-player-modal hidden"
+  playerModal.innerHTML = `
+    <div class="video-player-backdrop" onclick="closeVideoPlayer()"></div>
+    <div class="video-player-container">
+      <div class="video-player-header">
+        <div class="video-player-title">
+          <i class="fas fa-play-circle text-red-500 mr-3"></i>
+          <span id="video-title-text">Video Player</span>
+        </div>
+        <div class="video-player-controls">
+          <button onclick="reloadVideo()" class="video-control-btn reload-btn" title="Reload Video">
+            <i class="fas fa-redo"></i>
+          </button>
+          <button onclick="toggleVideoFullscreen()" class="video-control-btn fullscreen-btn" title="Toggle Fullscreen">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button onclick="closeVideoPlayer()" class="video-control-btn close-btn" title="Close Player">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="video-player-content">
+        <div id="video-loading-spinner" class="video-loading-spinner">
+          <div class="spinner-animation">
+            <i class="fas fa-spinner fa-spin text-4xl text-red-500 mb-4"></i>
+            <p class="text-white text-lg">Loading video...</p>
+            <div class="loading-bar">
+              <div class="loading-progress"></div>
+            </div>
+          </div>
+        </div>
+        
+        <div id="video-iframe-container" class="video-iframe-container">
+          <!-- Video iframe will be inserted here -->
+        </div>
+        
+        <div id="video-error-message" class="video-error-message hidden">
+          <div class="error-content">
+            <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
+            <h3 class="text-2xl font-bold text-white mb-2">Video Load Error</h3>
+            <p class="text-gray-400 mb-6">The video failed to load. Please try reloading or check your connection.</p>
+            <button onclick="reloadVideo()" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors">
+              <i class="fas fa-redo mr-2"></i>
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `
+
+  document.body.appendChild(playerModal)
+}
+
 function openVideoPlayer() {
   console.log("Opening in-page video player...")
 
@@ -829,7 +901,7 @@ function toggleVideoFullscreen() {
     } else if (modal.msRequestFullscreen) {
       modal.msRequestFullscreen()
     }
-    if (fullscreenBtn) fullscreenBtn.className = "fas fa-compress"
+    fullscreenBtn.className = "fas fa-compress"
   } else {
     // Exit fullscreen
     if (document.exitFullscreen) {
@@ -839,7 +911,7 @@ function toggleVideoFullscreen() {
     } else if (document.msExitFullscreen) {
       document.msExitFullscreen()
     }
-    if (fullscreenBtn) fullscreenBtn.className = "fas fa-expand"
+    fullscreenBtn.className = "fas fa-expand"
   }
 }
 
