@@ -144,6 +144,7 @@ function loadMoviePlayer(episodeParam) {
   const desktopPlayer = document.getElementById("desktop-player")
 
   let embedCode = currentMovie.embedCode
+  let videoUrl = currentMovie.videoUrl
   let title = currentMovie.title
   let hasEmbed = false
 
@@ -153,18 +154,19 @@ function loadMoviePlayer(episodeParam) {
     if (episodeIndex >= 0 && episodeIndex < currentMovie.multipleDownloads.length) {
       const episode = currentMovie.multipleDownloads[episodeIndex]
       embedCode = episode.embedCode
+      videoUrl = episode.videoUrl || videoUrl
       title = `${currentMovie.title} - ${episode.label}`
       currentEpisode = episodeIndex
-      hasEmbed = !!episode.embedCode
+      hasEmbed = !!(episode.embedCode || episode.videoUrl)
     }
-  } else if (currentMovie.embedCode) {
+  } else if (currentMovie.embedCode || currentMovie.videoUrl) {
     hasEmbed = true
   }
 
   // Create player HTML
   let playerHTML = ""
 
-  if (hasEmbed && embedCode) {
+  if (hasEmbed && (embedCode || videoUrl)) {
     playerHTML = `
             <div class="player-container relative">
                 <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="openFullPagePlayer()">
@@ -181,14 +183,19 @@ function loadMoviePlayer(episodeParam) {
             </div>
         `
   } else {
+    // Only download available
     playerHTML = `
             <div class="player-container relative">
-                <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full">
-                    <div class="play-icon bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                        <i class="fas fa-play text-2xl text-white ml-1"></i>
+                <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="downloadMovie()">
+                    <div class="play-icon bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors">
+                        <i class="fas fa-download text-2xl text-white"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-2 text-center px-4">${title}</h3>
-                    <p class="text-gray-400 text-center px-4">Video not available</p>
+                    <p class="text-gray-400 text-center px-4">Click to download</p>
+                    <div class="player-preview mt-4 bg-gray-600/20 px-4 py-2 rounded-lg">
+                        <i class="fas fa-download text-sm mr-2"></i>
+                        Download Available
+                    </div>
                 </div>
             </div>
         `
@@ -197,10 +204,12 @@ function loadMoviePlayer(episodeParam) {
   if (mobilePlayer) mobilePlayer.innerHTML = playerHTML
   if (desktopPlayer) desktopPlayer.innerHTML = playerHTML
 
-  // Store embed code for later use
+  // Store embed code and video URL for later use
   window.currentEmbedCode = embedCode
+  window.currentVideoUrl = videoUrl
+  window.hasEmbeddedVideo = hasEmbed
 
-  console.log("Player loaded with embed:", !!embedCode)
+  console.log("Player loaded with embed:", !!embedCode, "videoUrl:", !!videoUrl)
 }
 
 function loadMovieInfo() {
@@ -208,6 +217,17 @@ function loadMovieInfo() {
 
   const mobileInfo = document.getElementById("mobile-movie-info")
   const desktopInfo = document.getElementById("desktop-movie-info")
+
+  // Check if movie has embedded video
+  const hasEmbeddedVideo = !!(
+    currentMovie.embedCode ||
+    currentMovie.videoUrl ||
+    (currentMovie.multipleDownloads && currentMovie.multipleDownloads.some((ep) => ep.embedCode || ep.videoUrl))
+  )
+
+  const watchButtonAction = hasEmbeddedVideo ? "openFullPagePlayer()" : "downloadMovie()"
+  const watchButtonText = hasEmbeddedVideo ? "Watch Now" : "Download"
+  const watchButtonIcon = hasEmbeddedVideo ? "fa-play" : "fa-download"
 
   const infoHTML = `
         <div class="flex items-start space-x-4 mb-4">
@@ -228,14 +248,20 @@ function loadMovieInfo() {
         </div>
         <p class="text-gray-300 text-sm mb-4 line-clamp-3">${currentMovie.description}</p>
         <div class="flex flex-wrap gap-2">
-            <button onclick="openFullPagePlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
-                <i class="fas fa-play"></i>
-                <span>Watch Now</span>
+            <button onclick="${watchButtonAction}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
+                <i class="fas ${watchButtonIcon}"></i>
+                <span>${watchButtonText}</span>
             </button>
+            ${
+              hasEmbeddedVideo
+                ? `
             <button onclick="downloadMovie()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
                 <i class="fas fa-download"></i>
                 <span>Download</span>
             </button>
+            `
+                : ""
+            }
         </div>
     `
 
@@ -296,8 +322,10 @@ function playEpisode(episodeIndex) {
   url.searchParams.set("episode", episodeIndex + 1)
   window.history.pushState({}, "", url)
 
-  // Store current embed code
+  // Store current embed code and video URL
   window.currentEmbedCode = episode.embedCode
+  window.currentVideoUrl = episode.videoUrl
+  window.hasEmbeddedVideo = !!(episode.embedCode || episode.videoUrl)
 
   // Update player
   loadMoviePlayer(episodeIndex + 1)
@@ -599,9 +627,19 @@ function loadRelatedMovies() {
 }
 
 function downloadMovie() {
-  if (currentMovie.downloadUrl) {
-    window.open(currentMovie.downloadUrl, "_blank")
-    showToast(`Starting download: ${currentMovie.title}`, "success")
+  let downloadUrl = currentMovie.downloadUrl
+  let title = currentMovie.title
+
+  // If we're viewing an episode, get the episode's download URL
+  if (currentEpisode !== null && currentMovie.multipleDownloads) {
+    const episode = currentMovie.multipleDownloads[currentEpisode]
+    downloadUrl = episode.url || episode.downloadUrl || downloadUrl
+    title = `${currentMovie.title} - ${episode.label}`
+  }
+
+  if (downloadUrl) {
+    window.open(downloadUrl, "_blank")
+    showToast(`Starting download: ${title}`, "success")
   } else {
     showToast("Download not available", "error")
   }
@@ -654,8 +692,10 @@ function initializeFullPagePlayer() {
 function openFullPagePlayer() {
   console.log("Opening full page player...")
 
-  if (!window.currentEmbedCode) {
-    showToast("Video not available", "error")
+  // Check if we have embedded video available
+  if (!window.currentEmbedCode && !window.currentVideoUrl) {
+    showToast("Video not available - redirecting to download", "info")
+    downloadMovie()
     return
   }
 
@@ -676,12 +716,23 @@ function openFullPagePlayer() {
     episodeInfo.textContent = ""
   }
 
-  // Load video
-  videoContainer.innerHTML = `
+  // Load video - prioritize embedCode over videoUrl
+  let videoContent = ""
+  if (window.currentEmbedCode) {
+    videoContent = `
         <div class="embedded-video">
             ${window.currentEmbedCode}
         </div>
     `
+  } else if (window.currentVideoUrl) {
+    videoContent = `
+        <div class="embedded-video">
+            <iframe src="${window.currentVideoUrl}" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>
+        </div>
+    `
+  }
+
+  videoContainer.innerHTML = videoContent
 
   // Show player
   player.classList.remove("hidden")
