@@ -122,6 +122,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/0e91dec87ca03aef/Trap_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt3825788" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt3825788",
     isFeatured: true,
     isTrending: true,
   },
@@ -143,6 +146,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/246e0d453cb2f29b/Borderlands_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt4978420" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt4978420",
     isTrending: true,
   },
   {
@@ -163,6 +169,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/21a58a24f55d5b92/Inside_Out_2_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt22022452" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt22022452",
     isFeatured: true,
     isTrending: true,
   },
@@ -492,6 +501,9 @@ const moviesData = [
     country: "Ireland",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/0efb4fef3368f6c4/Kinds_of_Kindness_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt13651794" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt13651794",
     isTrending: true,
   },
   {
@@ -592,6 +604,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/34cae48ac31704b5/The_Killer_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt27503384" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt27503384",
     isTrending: true,
   },
   {
@@ -689,6 +704,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/c0443ae209ee19e7/Longlegs_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt23468450" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt23468450",
     isFeatured: true,
     isTrending: true,
   },
@@ -710,6 +728,9 @@ const moviesData = [
     country: "India",
     language: "Telugu",
     downloadUrl: "https://netnaijafiles.xyz/159f3e0823e78f29/Kalki_2898_AD_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt12735488" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt12735488",
     isFeatured: true,
     isTrending: true,
   },
@@ -731,6 +752,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/e086a8ee5d38f833/The_Wolf_of_Wall_Street_(2013)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt0993846" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt0993846",
     isFeatured: true,
   },
   {
@@ -770,6 +794,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://www.downloadbetter.com/YwpcEElGt63/joker-2019-netnaija-com-mp4.html",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt7286456" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt7286456",
     isFeatured: true,
     isTrending: true,
   },
@@ -792,6 +819,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://www.downloadbetter.com/hrnTlIlCy56/the-irishman-2019-netnaija-com-mp4.html",
+    embedCode:
+      '<iframe src="https://vidsrc.xyz/embed/movie/tt1302006" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://vidsrc.xyz/embed/movie/tt1302006",
     isFeatured: true,
   },
   {
