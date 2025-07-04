@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads - CineStream</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header id="header" class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="back-btn" class="back-btn">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <a href="index.html" class="logo">
+                        <div class="logo-text">CINESTREAM</div>
+                    </a>
+                    <h1 id="page-title" class="page-title">Downloads</h1>
+                </div>
+
+                <nav class="nav-desktop">
+                    <button id="back-btn-desktop" class="btn btn-ghost">
+                        <i data-lucide="arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="movies.html" class="nav-link">Movies</a>
+                    <a href="downloads-center.html" class="nav-link active">
+                        <i data-lucide="download"></i>
+                        <span>Downloads</span>
+                    </a>
+                    <a href="categories.html" class="nav-link">Categories</a>
+                    <a href="all-movies.html" class="nav-link">All Movies A-Z</a>
+                    <a href="search.html" class="nav-link">Search</a>
+                    <a href="latest-movies.html" class="nav-link">Latest Movies</a>
+                </nav>
+
+                <div class="header-right">
+                    <a href="search.html" class="search-btn-mobile">
+                        <i data-lucide="search"></i>
+                    </a>
+                    <button id="mobile-menu-btn" class="mobile-menu-btn">
+                        <i data-lucide="menu"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main downloads-page">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title-main">Downloads</h1>
+                <div class="download-stats">
+                    <div class="stat-badge stat-active">
+                        <span id="active-count">0</span> Active
+                    </div>
+                    <div class="stat-badge stat-completed">
+                        <span id="completed-count">0</span> Completed
+                    </div>
+                    <div class="stat-badge stat-total">
+                        <span id="total-count">0</span> Total
+                    </div>
+                </div>
+            </div>
+
+            <!-- Downloads List -->
+            <div id="downloads-container" class="downloads-container">
+                <!-- Downloads will be loaded here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="downloads-empty" class="downloads-empty">
+                <div class="empty-icon">
+                    <i data-lucide="download"></i>
+                </div>
+                <h2>No Downloads</h2>
+                <p>Start downloading movies to see them here</p>
+                <a href="index.html" class="btn btn-primary">Browse Movies</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <nav class="mobile-nav-bottom">
+        <a href="index.html" class="mobile-nav-item">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </a>
+        <a href="search.html" class="mobile-nav-item">
+            <i data-lucide="search"></i>
+            <span>Search</span>
+        </a>
+        <a href="categories.html" class="mobile-nav-item">
+            <i data-lucide="grid-3x3"></i>
+            <span>Categories</span>
+        </a>
+        <a href="downloads.html" class="mobile-nav-item active">
+            <i data-lucide="download"></i>
+            <span>Downloads</span>
+        </a>
+        <a href="movies.html" class="mobile-nav-item">
+            <i data-lucide="film"></i>
+            <span>Movies</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/downloads.js"></script>
+</body>
+</html>
