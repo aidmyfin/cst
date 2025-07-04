@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Categories - CINESTREAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-black text-white">
+    <!-- Header -->
+    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-black/95 backdrop-blur-xl border-b border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
+                    </a>
+                    <h1 class="text-lg font-semibold text-white md:hidden">Categories</h1>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors">Home</a>
+                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
+                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors text-red-400">Categories</a>
+                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors">Search</a>
+                </nav>
+
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="search.html" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Browse Categories</h1>
+                <p class="text-gray-400 text-lg">Discover movies by your favorite genres</p>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 pb-20 md:pb-8">
+                <a href="category.html?genre=action" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">⚡</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Action</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">High-octane thrills and excitement</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">45 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=comedy" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">😂</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Comedy</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Laugh-out-loud entertainment</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">32 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=drama" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🎭</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Drama</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Compelling stories and characters</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">58 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=horror" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">👻</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Horror</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Spine-chilling scares</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">28 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=romance" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">💕</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Romance</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Love stories that touch the heart</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">24 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=sci-fi" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🚀</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Sci-Fi</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Futuristic adventures</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">35 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=thriller" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🔥</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Thriller</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Edge-of-your-seat suspense</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">41 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=animation" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🎨</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Animation</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Animated masterpieces</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">19 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=adventure" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🗺️</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Adventure</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Epic journeys and quests</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">33 movies</span>
+                        </div>
+                    </div>
+                </a>
+
+                <a href="category.html?genre=crime" class="category-card bg-gray-900 border border-gray-700 hover:bg-gray-800 hover:border-red-600 transition-all duration-300 cursor-pointer group rounded-lg">
+                    <div class="p-4 md:p-6 text-center h-full flex flex-col justify-between">
+                        <div>
+                            <div class="text-3xl md:text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">🔫</div>
+                            <h3 class="font-bold text-white text-lg mb-2 group-hover:text-red-400 transition-colors">Crime</h3>
+                            <p class="text-sm text-gray-400 mb-3 line-clamp-2">Gritty crime stories</p>
+                        </div>
+                        <div class="mt-auto">
+                            <span class="inline-block border border-gray-600 text-gray-300 group-hover:border-red-400 group-hover:text-red-400 px-3 py-1 rounded-full text-sm">37 movies</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Popular Categories Section -->
+            <div class="mt-16">
+                <h2 class="text-2xl font-bold text-white mb-6">Most Popular</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <a href="category.html?genre=action" class="bg-gradient-to-r from-red-900/20 to-red-600/20 border border-red-600/30 hover:from-red-800/30 hover:to-red-500/30 transition-all duration-300 cursor-pointer rounded-lg">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-4xl">⚡</div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-white text-xl mb-1">Action</h3>
+                                    <p class="text-gray-300 text-sm mb-2">High-octane thrills and excitement</p>
+                                    <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">45 movies</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="category.html?genre=drama" class="bg-gradient-to-r from-red-900/20 to-red-600/20 border border-red-600/30 hover:from-red-800/30 hover:to-red-500/30 transition-all duration-300 cursor-pointer rounded-lg">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-4xl">🎭</div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-white text-xl mb-1">Drama</h3>
+                                    <p class="text-gray-300 text-sm mb-2">Compelling stories and characters</p>
+                                    <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">58 movies</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <a href="category.html?genre=thriller" class="bg-gradient-to-r from-red-900/20 to-red-600/20 border border-red-600/30 hover:from-red-800/30 hover:to-red-500/30 transition-all duration-300 cursor-pointer rounded-lg">
+                        <div class="p-6">
+                            <div class="flex items-center space-x-4">
+                                <div class="text-4xl">🔥</div>
+                                <div class="flex-1">
+                                    <h3 class="font-bold text-white text-xl mb-1">Thriller</h3>
+                                    <p class="text-gray-300 text-sm mb-2">Edge-of-your-seat suspense</p>
+                                    <span class="bg-red-600 text-white px-3 py-1 rounded-full text-sm">41 movies</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs font-medium">Search</span>
+            </a>
+            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-download mb-1"></i>
+                <span class="text-xs font-medium">Downloads</span>
+            </a>
+            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-red-500 bg-red-500/10">
+                <i class="fas fa-th-large mb-1"></i>
+                <span class="text-xs font-medium">Categories</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-user mb-1"></i>
+                <span class="text-xs font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="categories.js"></script>
+</body>
+</html>

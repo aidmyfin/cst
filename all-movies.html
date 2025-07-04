@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Movies A-Z - CINESTREAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-black text-white">
+    <!-- Header -->
+    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-black/95 backdrop-blur-xl border-b border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
+                    </a>
+                    <h1 class="text-lg font-semibold text-white md:hidden">All Movies A-Z</h1>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors">Home</a>
+                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
+                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors">Categories</a>
+                    <a href="all-movies.html" class="text-white hover:text-gray-300 font-medium transition-colors text-red-400">All Movies A-Z</a>
+                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors">Search</a>
+                </nav>
+
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="search.html" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">All Movies A-Z</h1>
+                <p id="total-movies" class="text-gray-400 text-lg">Browse our complete collection</p>
+            </div>
+
+            <!-- Alphabet Navigation -->
+            <div class="mb-8 sticky top-16 bg-black/95 backdrop-blur-xl py-4 z-40">
+                <div class="flex flex-wrap gap-2" id="alphabet-nav">
+                    <!-- Alphabet buttons will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Movies by Letter -->
+            <div id="movies-by-letter" class="space-y-12 pb-20 md:pb-8">
+                <!-- Movies sections will be populated by JavaScript -->
+            </div>
+
+            <!-- Back to Top -->
+            <div class="mt-12 text-center">
+                <button onclick="scrollToTop()" class="bg-gray-800 hover:bg-red-600 border border-gray-600 hover:border-red-600 text-white px-6 py-3 rounded-lg transition-colors">
+                    Back to Top
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs font-medium">Search</span>
+            </a>
+            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-download mb-1"></i>
+                <span class="text-xs font-medium">Downloads</span>
+            </a>
+            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-th-large mb-1"></i>
+                <span class="text-xs font-medium">Categories</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-user mb-1"></i>
+                <span class="text-xs font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="all-movies.js"></script>
+</body>
+</html>

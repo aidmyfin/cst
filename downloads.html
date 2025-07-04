@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads Center - CINESTREAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-black text-white">
+    <!-- Header -->
+    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-black/95 backdrop-blur-xl border-b border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
+                    </a>
+                    <h1 class="text-lg font-semibold text-white md:hidden">Downloads</h1>
+                </div>
+
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i>
+                        <span>Back</span>
+                    </button>
+                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors">Home</a>
+                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
+                    <a href="downloads.html" class="text-white hover:text-gray-300 font-medium transition-colors text-red-400 flex items-center space-x-1">
+                        <i class="fas fa-download"></i>
+                        <span>Downloads</span>
+                    </a>
+                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors">Categories</a>
+                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors">Search</a>
+                </nav>
+
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <a href="search.html" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Downloads Center</h1>
+                <p class="text-gray-400 text-lg">Download your favorite movies in high quality</p>
+            </div>
+
+            <!-- Download Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-red-500 mb-2">500+</div>
+                    <div class="text-gray-400 text-sm">Total Movies</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-green-500 mb-2">4K</div>
+                    <div class="text-gray-400 text-sm">Quality</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-blue-500 mb-2">Fast</div>
+                    <div class="text-gray-400 text-sm">Download</div>
+                </div>
+                <div class="bg-gray-900 rounded-lg p-4 text-center">
+                    <div class="text-2xl font-bold text-yellow-500 mb-2">Free</div>
+                    <div class="text-gray-400 text-sm">Always</div>
+                </div>
+            </div>
+
+            <!-- Quality Options -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white mb-4">Available Qualities</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 hover:border-red-600 transition-colors">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-video text-red-500 text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-white">4K Ultra HD</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Experience movies in stunning 4K resolution with crystal clear picture quality.</p>
+                        <div class="text-sm text-gray-500">
+                            <div>• Resolution: 3840x2160</div>
+                            <div>• File Size: 8-15 GB</div>
+                            <div>• Format: MP4/MKV</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 hover:border-red-600 transition-colors">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-hdd text-green-500 text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-white">Full HD</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">High definition quality perfect for most devices and internet speeds.</p>
+                        <div class="text-sm text-gray-500">
+                            <div>• Resolution: 1920x1080</div>
+                            <div>• File Size: 2-4 GB</div>
+                            <div>• Format: MP4/MKV</div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900 rounded-lg p-6 border border-gray-700 hover:border-red-600 transition-colors">
+                        <div class="flex items-center mb-4">
+                            <i class="fas fa-mobile-alt text-blue-500 text-2xl mr-3"></i>
+                            <h3 class="text-xl font-bold text-white">Mobile Quality</h3>
+                        </div>
+                        <p class="text-gray-400 mb-4">Optimized for mobile devices and slower internet connections.</p>
+                        <div class="text-sm text-gray-500">
+                            <div>• Resolution: 720p/480p</div>
+                            <div>• File Size: 500MB-1GB</div>
+                            <div>• Format: MP4</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Downloads -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Popular Downloads</h2>
+                <div id="popular-downloads" class="movie-grid">
+                    <!-- Popular downloads will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Recent Downloads -->
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white mb-6">Recently Added</h2>
+                <div id="recent-downloads" class="movie-grid">
+                    <!-- Recent downloads will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Download Instructions -->
+            <div class="bg-gray-900 rounded-lg p-6 mb-8">
+                <h2 class="text-2xl font-bold text-white mb-4">How to Download</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center">
+                        <div class="bg-red-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white font-bold">1</span>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">Choose Movie</h3>
+                        <p class="text-gray-400 text-sm">Browse and select the movie you want to download</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-red-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white font-bold">2</span>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">Select Quality</h3>
+                        <p class="text-gray-400 text-sm">Pick your preferred video quality and format</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="bg-red-600 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-3">
+                            <span class="text-white font-bold">3</span>
+                        </div>
+                        <h3 class="font-bold text-white mb-2">Download</h3>
+                        <p class="text-gray-400 text-sm">Click download and enjoy your movie offline</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Browse All Movies -->
+            <div class="text-center pb-20 md:pb-8">
+                <h2 class="text-2xl font-bold text-white mb-4">Looking for something specific?</h2>
+                <p class="text-gray-400 mb-6">Browse our complete collection of movies</p>
+                <div class="flex flex-wrap gap-4 justify-center">
+                    <a href="all-movies.html" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg transition-colors">
+                        Browse All Movies
+                    </a>
+                    <a href="categories.html" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors">
+                        Browse by Category
+                    </a>
+                    <a href="search.html" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-lg transition-colors">
+                        Search Movies
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs font-medium">Search</span>
+            </a>
+            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-red-500 bg-red-500/10">
+                <i class="fas fa-download mb-1"></i>
+                <span class="text-xs font-medium">Downloads</span>
+            </a>
+            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-th-large mb-1"></i>
+                <span class="text-xs font-medium">Categories</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-user mb-1"></i>
+                <span class="text-xs font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="downloads.js"></script>
+</body>
+</html>
