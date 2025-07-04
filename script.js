@@ -1,70 +1,59 @@
-// Main JavaScript file for the website
+// Main JavaScript for CINESTREAM website
 
 // Global variables
-let currentHeroSlide = 0
-let heroSlides = []
+let currentSlide = 0
+const isSearchVisible = false
 
 // Initialize the website
 document.addEventListener("DOMContentLoaded", () => {
-  initializeHeader()
-  initializeHeroBanner()
+  initializeHeroSlider()
   loadMovieRows()
+  initializeSearch()
   initializeMobileMenu()
+  initializeScrollEffects()
 })
 
-// Header functionality
-function initializeHeader() {
-  const header = document.getElementById("header")
-
-  window.addEventListener("scroll", () => {
-    if (window.scrollY > 50) {
-      header.classList.remove("bg-gradient-to-b", "from-black/80", "to-transparent")
-      header.classList.add("bg-black/95", "backdrop-blur-xl", "border-b", "border-gray-800")
-    } else {
-      header.classList.add("bg-gradient-to-b", "from-black/80", "to-transparent")
-      header.classList.remove("bg-black/95", "backdrop-blur-xl", "border-b", "border-gray-800")
-    }
-  })
-}
-
-// Hero banner functionality
-function initializeHeroBanner() {
-  const featuredMovies = window.movieData.getFeaturedMovies().slice(0, 5)
+// Hero slider functionality
+function initializeHeroSlider() {
   const heroSlider = document.getElementById("hero-slider")
-  const heroTitle = document.getElementById("hero-title")
-  const heroDescription = document.getElementById("hero-description")
+  if (!heroSlider) return
 
-  if (!featuredMovies.length) return
+  const featuredMovies = window.movieData.getFeaturedMovies().slice(0, 5)
 
-  heroSlides = featuredMovies
-
-  // Create hero slides
   featuredMovies.forEach((movie, index) => {
     const slide = document.createElement("div")
     slide.className = `hero-slide ${index === 0 ? "active" : ""}`
     slide.style.backgroundImage = `url(${movie.backdrop || movie.poster})`
+    slide.innerHTML = `
+      <div class="hero-content">
+        <h1 class="hero-title">${movie.title}</h1>
+        <p class="hero-description">${movie.description}</p>
+        <div class="hero-actions">
+          <button onclick="goToMovie('${movie.slug}')" class="btn-primary">
+            <i class="fas fa-play"></i> Watch Now
+          </button>
+          <button onclick="goToMovie('${movie.slug}')" class="btn-secondary">
+            <i class="fas fa-info-circle"></i> More Info
+          </button>
+        </div>
+      </div>
+    `
     heroSlider.appendChild(slide)
   })
 
-  // Update hero content
-  function updateHeroContent() {
-    const currentMovie = heroSlides[currentHeroSlide]
-    heroTitle.textContent = currentMovie.title
-    heroDescription.textContent = currentMovie.description
-  }
-
-  updateHeroContent()
-
-  // Auto-rotate hero slides
+  // Auto-advance slides
   setInterval(() => {
-    const slides = document.querySelectorAll(".hero-slide")
-    slides[currentHeroSlide].classList.remove("active")
-
-    currentHeroSlide = (currentHeroSlide + 1) % heroSlides.length
-
-    slides[currentHeroSlide].classList.add("active")
-    updateHeroContent()
+    nextSlide()
   }, 5000)
+}
+
+function nextSlide() {
+  const slides = document.querySelectorAll(".hero-slide")
+  if (slides.length === 0) return
+
+  slides[currentSlide].classList.remove("active")
+  currentSlide = (currentSlide + 1) % slides.length
+  slides[currentSlide].classList.add("active")
 }
 
 // Load movie rows
@@ -77,25 +66,33 @@ function loadMovieRows() {
 
 function loadTrendingMovies() {
   const container = document.getElementById("trending-movies")
-  const movies = window.movieData.getTrendingMovies()
+  if (!container) return
+
+  const movies = window.movieData.getTrendingMovies().slice(0, 12)
   renderMovieGrid(container, movies)
 }
 
 function loadNewMovies() {
   const container = document.getElementById("new-movies")
-  const movies = window.movieData.getNewMovies()
+  if (!container) return
+
+  const movies = window.movieData.getNewMovies().slice(0, 12)
   renderMovieGrid(container, movies)
 }
 
 function loadActionMovies() {
   const container = document.getElementById("action-movies")
-  const movies = window.movieData.getMoviesByGenre("Action").slice(0, 8)
+  if (!container) return
+
+  const movies = window.movieData.getMoviesByGenre("Action").slice(0, 12)
   renderMovieGrid(container, movies)
 }
 
 function loadComedyMovies() {
   const container = document.getElementById("comedy-movies")
-  const movies = window.movieData.getMoviesByGenre("Comedy").slice(0, 8)
+  if (!container) return
+
+  const movies = window.movieData.getMoviesByGenre("Comedy").slice(0, 12)
   renderMovieGrid(container, movies)
 }
 
@@ -107,30 +104,133 @@ function renderMovieGrid(container, movies) {
     .map(
       (movie) => `
         <div class="movie-card" onclick="goToMovie('${movie.slug}')">
-            <div class="relative">
+            <div class="movie-poster">
                 <img src="${movie.poster}" alt="${movie.title}" loading="lazy">
-                <div class="quality-badge">${movie.quality}</div>
-                <div class="rating-badge">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    ${movie.rating}
-                </div>
-                <div class="overlay">
+                <div class="movie-overlay">
                     <div class="play-button">
                         <i class="fas fa-play"></i>
                     </div>
-                </div>
-            </div>
-            <div class="movie-info">
-                <div class="movie-title">${movie.title}</div>
-                <div class="movie-meta">
-                    <span>${movie.year}</span>
-                    <span>${movie.duration}</span>
+                    <div class="movie-info-overlay">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-meta">
+                            <span class="quality">${movie.quality}</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                ${movie.rating}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     `,
     )
     .join("")
+}
+
+// Navigation functions
+function goToMovie(slug) {
+  window.location.href = `movie.html?slug=${slug}`
+}
+
+function goToPage(page) {
+  window.location.href = `${page}.html`
+}
+
+// Search functionality
+function initializeSearch() {
+  const searchInput = document.getElementById("search-input")
+  const searchResults = document.getElementById("search-results")
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      const query = this.value.trim()
+      if (query.length > 2) {
+        performSearch(query)
+      } else {
+        hideSearchResults()
+      }
+    })
+
+    searchInput.addEventListener("focus", function () {
+      if (this.value.trim().length > 2) {
+        showSearchResults()
+      }
+    })
+
+    // Hide search results when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-container")) {
+        hideSearchResults()
+      }
+    })
+  }
+}
+
+function performSearch(query) {
+  const results = window.movieData.searchMovies(query)
+  displaySearchResults(results.slice(0, 8))
+}
+
+function displaySearchResults(results) {
+  const searchResults = document.getElementById("search-results")
+  if (!searchResults) return
+
+  if (results.length === 0) {
+    searchResults.innerHTML = `
+      <div class="search-no-results">
+        <i class="fas fa-search"></i>
+        <p>No movies found</p>
+      </div>
+    `
+  } else {
+    searchResults.innerHTML = results
+      .map(
+        (movie) => `
+          <div class="search-result-item" onclick="goToMovie('${movie.slug}')">
+              <img src="${movie.poster}" alt="${movie.title}">
+              <div class="search-result-info">
+                  <div class="search-result-title">${movie.title}</div>
+                  <div class="search-result-meta">
+                      <span>${movie.year}</span>
+                      <span>${movie.quality}</span>
+                      <span><i class="fas fa-star"></i> ${movie.rating}</span>
+                  </div>
+              </div>
+          </div>
+      `,
+      )
+      .join("")
+  }
+
+  showSearchResults()
+}
+
+function showSearchResults() {
+  const searchResults = document.getElementById("search-results")
+  if (searchResults) {
+    searchResults.classList.add("visible")
+  }
+}
+
+function hideSearchResults() {
+  const searchResults = document.getElementById("search-results")
+  if (searchResults) {
+    searchResults.classList.remove("visible")
+  }
+}
+
+function toggleSearch() {
+  const searchContainer = document.querySelector(".search-container")
+  if (searchContainer) {
+    searchContainer.classList.toggle("active")
+    if (searchContainer.classList.contains("active")) {
+      const searchInput = document.getElementById("search-input")
+      if (searchInput) {
+        searchInput.focus()
+      }
+    }
+  }
 }
 
 // Mobile menu functionality
@@ -142,185 +242,83 @@ function toggleMobileMenu() {
   const mobileMenu = document.getElementById("mobile-menu")
   const menuIcon = document.getElementById("mobile-menu-icon")
 
-  if (mobileMenu.classList.contains("hidden")) {
-    mobileMenu.classList.remove("hidden")
-    menuIcon.classList.remove("fa-bars")
-    menuIcon.classList.add("fa-times")
-  } else {
-    mobileMenu.classList.add("hidden")
-    menuIcon.classList.remove("fa-times")
-    menuIcon.classList.add("fa-bars")
+  if (mobileMenu && menuIcon) {
+    mobileMenu.classList.toggle("hidden")
+
+    if (mobileMenu.classList.contains("hidden")) {
+      menuIcon.className = "fas fa-bars"
+    } else {
+      menuIcon.className = "fas fa-times"
+    }
   }
 }
 
-// Navigation functions
-function goToMovie(slug) {
-  window.location.href = `movie.html?slug=${slug}`
-}
+// Scroll effects
+function initializeScrollEffects() {
+  const header = document.getElementById("header")
 
-function goBack() {
-  if (window.history.length > 1) {
-    window.history.back()
-  } else {
-    window.location.href = "index.html"
-  }
-}
-
-// Search functionality
-function toggleSearch() {
-  window.location.href = "search.html"
-}
-
-// Utility functions
-function scrollToTop() {
-  window.scrollTo({
-    top: 0,
-    behavior: "smooth",
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 100) {
+      header.classList.add("scrolled")
+    } else {
+      header.classList.remove("scrolled")
+    }
   })
 }
 
-// Get URL parameters
-function getUrlParameter(name) {
-  const urlParams = new URLSearchParams(window.location.search)
-  return urlParams.get(name)
-}
-
-// Format duration
-function formatDuration(minutes) {
-  const hours = Math.floor(minutes / 60)
-  const mins = minutes % 60
-  return hours > 0 ? `${hours}h ${mins}m` : `${mins}m`
-}
-
-// Format file size
-function formatFileSize(bytes) {
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
-  if (bytes === 0) return "0 Byte"
-  const i = Number.parseInt(Math.floor(Math.log(bytes) / Math.log(1024)))
-  return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i]
-}
-
-// Show loading state
-function showLoading(container) {
-  if (container) {
-    container.innerHTML = `
-            <div class="text-center py-8">
-                <div class="loading-spinner mx-auto mb-4"></div>
-                <div class="text-white">Loading...</div>
-            </div>
-        `
+// Utility functions
+function formatViews(views) {
+  if (views >= 1000000) {
+    return (views / 1000000).toFixed(1) + "M"
+  } else if (views >= 1000) {
+    return (views / 1000).toFixed(1) + "K"
   }
+  return views.toString()
 }
 
-// Show error state
-function showError(container, message = "Something went wrong") {
-  if (container) {
-    container.innerHTML = `
-            <div class="text-center py-8">
-                <div class="text-6xl mb-4">😞</div>
-                <div class="text-white text-xl mb-2">Oops!</div>
-                <div class="text-gray-400">${message}</div>
-            </div>
-        `
-  }
-}
-
-// Debounce function for search
-function debounce(func, wait) {
-  let timeout
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
-  }
-}
-
-// Local storage helpers
-function saveToLocalStorage(key, data) {
-  try {
-    localStorage.setItem(key, JSON.stringify(data))
-  } catch (error) {
-    console.error("Error saving to localStorage:", error)
-  }
-}
-
-function getFromLocalStorage(key) {
-  try {
-    const data = localStorage.getItem(key)
-    return data ? JSON.parse(data) : null
-  } catch (error) {
-    console.error("Error reading from localStorage:", error)
-    return null
-  }
-}
-
-// Toast notification system
 function showToast(message, type = "info") {
   const toast = document.createElement("div")
-  toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg text-white font-medium transition-all duration-300 transform translate-x-full`
-
-  switch (type) {
-    case "success":
-      toast.classList.add("bg-green-600")
-      break
-    case "error":
-      toast.classList.add("bg-red-600")
-      break
-    case "warning":
-      toast.classList.add("bg-yellow-600")
-      break
-    default:
-      toast.classList.add("bg-blue-600")
-  }
-
+  toast.className = `toast toast-${type}`
   toast.textContent = message
+
   document.body.appendChild(toast)
 
-  // Animate in
   setTimeout(() => {
-    toast.classList.remove("translate-x-full")
+    toast.classList.add("show")
   }, 100)
 
-  // Animate out and remove
   setTimeout(() => {
-    toast.classList.add("translate-x-full")
+    toast.classList.remove("show")
     setTimeout(() => {
-      document.body.removeChild(toast)
+      if (document.body.contains(toast)) {
+        document.body.removeChild(toast)
+      }
     }, 300)
   }, 3000)
 }
 
-// Initialize tooltips (if needed)
-function initializeTooltips() {
-  const tooltipElements = document.querySelectorAll("[data-tooltip]")
-  tooltipElements.forEach((element) => {
-    element.addEventListener("mouseenter", showTooltip)
-    element.addEventListener("mouseleave", hideTooltip)
-  })
+// Error handling
+window.addEventListener("error", (e) => {
+  console.error("JavaScript error:", e.error)
+})
+
+// Loading state management
+function showLoading(element) {
+  if (element) {
+    element.innerHTML = `
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading...</p>
+      </div>
+    `
+  }
 }
 
-function showTooltip(event) {
-  const element = event.target
-  const tooltipText = element.getAttribute("data-tooltip")
-
-  const tooltip = document.createElement("div")
-  tooltip.className = "absolute z-50 px-2 py-1 text-sm text-white bg-gray-900 rounded shadow-lg"
-  tooltip.textContent = tooltipText
-  tooltip.id = "tooltip"
-
-  document.body.appendChild(tooltip)
-
-  const rect = element.getBoundingClientRect()
-  tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + "px"
-  tooltip.style.top = rect.top - tooltip.offsetHeight - 5 + "px"
-}
-
-function hideTooltip() {
-  const tooltip = document.getElementById("tooltip")
-  if (tooltip) {
-    document.body.removeChild(tooltip)
+function hideLoading(element) {
+  if (element) {
+    const spinner = element.querySelector(".loading-spinner")
+    if (spinner) {
+      spinner.remove()
+    }
   }
 }
