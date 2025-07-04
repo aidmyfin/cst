@@ -43,9 +43,6 @@ const moviesData = [
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/d523df2f71926118/D%C3%ACdi_(2024)_(NetNaija.xyz).mkv",
     isNew: true,
-    embedCode:
-      '<iframe src="https://strtape.tech/e/d523df2f71926118/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://strtape.tech/e/d523df2f71926118/",
   },
   {
     id: "3",
