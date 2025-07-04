@@ -1348,18 +1348,18 @@ const moviesData = [
     id: "59",
     title: "The Old Guard 2",
     poster: "https://9jarocks.net/wp-content/uploads/2025/07/The-Old-Guard-2_Poster.jpg",
-    backdrop: \"https://9jarocks.net/wp-content/uploads/2025/0
-    genre: ["Action", \"Adventure", \"Fantasy"],\
-    year: 2025,\
-    rating: 7.6,\
-    views: 155000,\
-    quality: "WEBRip",\
-    slug: \"the-old-guard-2",\
-    duration: \"01:46:43\",\
+    backdrop: "https://9jarocks.net/wp-content/uploads/2025/07/The-Old-Guard-2_Poster.jpg",
+    genre: ["Action", "Adventure", "Fantasy"],
+    year: 2025,
+    rating: 7.6,
+    views: 155000,
+    quality: "WEBRip",
+    slug: "the-old-guard-2",
+    duration: "01:46:43",
     description:
-      \"Andy leads a group of immortal warriors against a powerful enemy while dealing with the return of a long-lost immortal.",
-    cast: ["Charlize Theron\", "KiKi Layne", \"Chiwetel Ejiofor", "Uma Thurman"],
-    director: "Victoria Mahoney\",
+      "Andy leads a group of immortal warriors against a powerful enemy while dealing with the return of a long-lost immortal.",
+    cast: ["Charlize Theron", "KiKi Layne", "Chiwetel Ejiofor", "Uma Thurman"],
+    director: "Victoria Mahoney",
     country: "United States of America",
     language: "English",
     videoUrl: "https://strtape.tech/e/0W104Zlk8Atbjjv/",
@@ -1375,21 +1375,21 @@ const moviesData = [
     title: "Shaka iLembe Season 2",
     poster: "https://9jarocks.net/wp-content/uploads/2025/06/Shaka-iLembe_Poster.jpg",
     backdrop: "https://9jarocks.net/wp-content/uploads/2025/06/Shaka-iLembe_Poster.jpg",
-    genre: ["Action", "Drama\", \"History"],
-    year: 2025,\
+    genre: ["Action", "Drama", "History"],
+    year: 2025,
     rating: 8.1,
     views: 135000,
     quality: "WEBRip",
     slug: "shaka-ilembe-season-2",
     duration: "3 Episodes Available",
     description: "Explores the legendary rise of King Shaka Zulu, from childhood to kinghood in 1700s Africa.",
-    cast: ["Nomzamo Mbatha", \"Wiseman Mncube", \"Lemogang Tsipa", \"Mondli Makhoba"],\
-    director: \"Teboho Mahlatsi\",\
+    cast: ["Nomzamo Mbatha", "Wiseman Mncube", "Lemogang Tsipa", "Mondli Makhoba"],
+    director: "Teboho Mahlatsi",
     country: "South Africa",
-    language: \"Zulu",
+    language: "Zulu",
     multipleDownloads: [
-      {\
-        label: "Episode 1",\
+      {
+        label: "Episode 1",
         url: "https://strtape.tech/v/wPyZwPowyOS6gp/Shaka.iLembe.S02E01.mkv",
         embedCode:
           '<iframe src="https://strtape.tech/e/wPyZwPowyOS6gp/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
@@ -1518,87 +1518,3 @@ if (typeof window !== "undefined") {
     getMoviesByLetter,
   }
 }
-
-// Sample movie data for testing
-window.movieData = {
-  movies: [
-    {
-      id: 1,
-      title: "Shaka iLembe Season 2",
-      slug: "shaka-ilembe-season-2",
-      poster: "/placeholder.svg?height=450&width=300",
-      year: "2023",
-      duration: "45 min",
-      rating: "8.5",
-      quality: "HD",
-      genre: ["Drama", "History", "Biography"],
-      description: "The story of the legendary Zulu king Shaka continues in this epic historical drama series.",
-      country: "South Africa",
-      language: "English/Zulu",
-      director: "Angus Gibson",
-      cast: ["Nomzamo Mbatha", "Lemogang Tsipa", "Thembinkosi Mthembu"],
-      views: 125000,
-      downloadUrl: "https://example.com/download/shaka-ilembe-s2",
-      embedCode:
-        '<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>',
-      multipleDownloads: [
-        {
-          label: "Episode 1 - The Return",
-          embedCode:
-            '<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>',
-          url: "https://example.com/download/shaka-s2-e1",
-        },
-        {
-          label: "Episode 2 - The Challenge",
-          embedCode:
-            '<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>',
-          url: "https://example.com/download/shaka-s2-e2",
-        },
-        {
-          label: "Episode 3 - The Alliance",
-          embedCode:
-            '<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>',
-          url: "https://example.com/download/shaka-s2-e3",
-        },
-      ],
-    },
-    {
-      id: 2,
-      title: "The Batman",
-      slug: "the-batman-2022",
-      poster: "/placeholder.svg?height=450&width=300",
-      year: "2022",
-      duration: "176 min",
-      rating: "7.8",
-      quality: "4K",
-      genre: ["Action", "Crime", "Drama"],
-      description:
-        "When a sadistic serial killer begins murdering key political figures in Gotham, Batman is forced to investigate the city's hidden corruption.",
-      country: "USA",
-      language: "English",
-      director: "Matt Reeves",
-      cast: ["Robert Pattinson", "Zoë Kravitz", "Paul Dano"],
-      views: 2500000,
-      downloadUrl: "https://example.com/download/the-batman",
-      embedCode:
-        '<iframe src="https://player.vimeo.com/video/76979871?h=8272103f6e" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>',
-    },
-  ],
-
-  getMovieBySlug: function (slug) {
-    return this.movies.find((movie) => movie.slug === slug)
-  },
-
-  getRelatedMovies: function (currentId, genres, limit = 8) {
-    return this.movies
-      .filter((movie) => movie.id !== currentId)
-      .filter((movie) => movie.genre.some((g) => genres.includes(g)))
-      .slice(0, limit)
-  },
-
-  getAllMovies: function () {
-    return this.movies
-  },
-}
-
-console.log("Movie data loaded:", window.movieData)
