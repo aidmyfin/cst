@@ -1,8 +1,9 @@
-// Movie page JavaScript with enhanced functionality
+// Movie page JavaScript with enhanced video player functionality
 
 let currentMovie = null
 let currentEpisode = null
 let isFullPagePlayer = false
+let videoPopupWindow = null
 
 // Utility functions
 function getUrlParameter(name) {
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM loaded, initializing movie page...")
   initializeMoviePage()
   initializeTabs()
-  initializeFullPagePlayer()
+  initializeVideoPlayer()
 })
 
 function initializeMoviePage() {
@@ -163,22 +164,32 @@ function loadMoviePlayer(episodeParam) {
     hasEmbed = true
   }
 
-  // Create player HTML
+  // Create enhanced player HTML with better video handling
   let playerHTML = ""
 
   if (hasEmbed && embedCode) {
     playerHTML = `
       <div class="player-container relative bg-black rounded-lg overflow-hidden">
         <div class="aspect-video">
-          <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="openFullPagePlayer()">
-            <div class="play-icon bg-red-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors shadow-lg">
-              <i class="fas fa-play text-2xl text-white ml-1"></i>
+          <div class="player-placeholder bg-gradient-to-br from-gray-800 to-gray-900 flex flex-col items-center justify-center h-full cursor-pointer hover:from-gray-700 hover:to-gray-800 transition-all duration-300 group" onclick="openVideoPlayer()">
+            <div class="play-icon bg-red-600 rounded-full w-20 h-20 flex items-center justify-center mb-6 hover:bg-red-700 transition-all duration-300 shadow-2xl group-hover:scale-110 transform">
+              <i class="fas fa-play text-3xl text-white ml-1"></i>
             </div>
-            <h3 class="text-xl font-bold mb-2 text-center px-4 text-white">${title}</h3>
-            <p class="text-gray-400 text-center px-4 mb-4">Click to watch in full screen</p>
-            <div class="player-preview bg-red-600/20 px-4 py-2 rounded-lg border border-red-600/30">
-              <i class="fas fa-expand text-sm mr-2 text-red-400"></i>
+            <h3 class="text-2xl font-bold mb-3 text-center px-6 text-white group-hover:text-gray-100 transition-colors">${title}</h3>
+            <p class="text-gray-400 text-center px-6 mb-6 group-hover:text-gray-300 transition-colors">Click to watch in full screen</p>
+            <div class="player-preview bg-red-600/20 px-6 py-3 rounded-lg border border-red-600/30 group-hover:bg-red-600/30 group-hover:border-red-600/50 transition-all duration-300">
+              <i class="fas fa-expand text-sm mr-3 text-red-400"></i>
               <span class="text-red-400 font-medium">Full Screen Player Available</span>
+            </div>
+            <div class="mt-4 flex space-x-4">
+              <div class="flex items-center text-gray-400 text-sm">
+                <i class="fas fa-video mr-2"></i>
+                <span>${currentMovie.quality}</span>
+              </div>
+              <div class="flex items-center text-gray-400 text-sm">
+                <i class="fas fa-clock mr-2"></i>
+                <span>${currentMovie.duration}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -190,7 +201,7 @@ function loadMoviePlayer(episodeParam) {
         <div class="aspect-video">
           <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full">
             <div class="play-icon bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mb-4">
-              <i class="fas fa-play text-2xl text-white ml-1"></i>
+              <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
             </div>
             <h3 class="text-xl font-bold mb-2 text-center px-4 text-white">${title}</h3>
             <p class="text-gray-400 text-center px-4">Video not available</p>
@@ -206,6 +217,7 @@ function loadMoviePlayer(episodeParam) {
   // Store embed code and video URL for later use
   window.currentEmbedCode = embedCode
   window.currentVideoUrl = videoUrl
+  window.currentVideoTitle = title
 
   console.log("Player loaded with embed:", !!embedCode)
   console.log("Current embed code:", embedCode)
@@ -236,7 +248,7 @@ function loadMovieInfo() {
         </div>
         <p class="text-gray-300 text-sm mb-4 line-clamp-3">${currentMovie.description}</p>
         <div class="flex flex-wrap gap-2">
-            <button onclick="openFullPagePlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
+            <button onclick="openVideoPlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
                 <i class="fas fa-play"></i>
                 <span>Watch Now</span>
             </button>
@@ -306,6 +318,7 @@ function playEpisode(episodeIndex) {
 
   // Store current embed code
   window.currentEmbedCode = episode.embedCode
+  window.currentVideoTitle = `${currentMovie.title} - ${episode.label}`
 
   // Update player
   loadMoviePlayer(episodeIndex + 1)
@@ -641,64 +654,20 @@ function downloadEpisode(episodeIndex) {
   }
 }
 
-// Full Page Player Functions
-function initializeFullPagePlayer() {
-  console.log("Initializing full page player...")
+// Enhanced Video Player Functions
+function initializeVideoPlayer() {
+  console.log("Initializing enhanced video player...")
 
-  // Remove existing player if it exists
-  const existingPlayer = document.getElementById("full-page-player")
-  if (existingPlayer) {
-    existingPlayer.remove()
-  }
-
-  const playerOverlay = document.createElement("div")
-  playerOverlay.id = "full-page-player"
-  playerOverlay.className = "full-page-player hidden"
-  playerOverlay.innerHTML = `
-    <div class="player-header">
-      <div class="player-title">
-        <h3 id="player-movie-title">${currentMovie?.title || "Movie Player"}</h3>
-        <span id="player-episode-info"></span>
-      </div>
-      <div class="player-controls-top">
-        <button onclick="togglePlayerFullscreen()" class="control-btn fullscreen-btn" title="Toggle Fullscreen">
-          <i class="fas fa-expand"></i>
-        </button>
-        <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close Player">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-    
-    <div class="player-content">
-      <div class="video-container" id="video-container">
-        <div class="video-loading">
-          <div class="loading-spinner"></div>
-          <p>Loading video...</p>
-        </div>
-      </div>
-    </div>
-    
-    <div class="player-footer">
-      <div class="player-info">
-        <span class="player-tip">Press ESC to close • Click outside to close</span>
-      </div>
-    </div>
-  `
-
-  // Add click outside to close functionality
-  playerOverlay.addEventListener("click", (e) => {
-    if (e.target === playerOverlay) {
-      closeFullPagePlayer()
+  // Close popup when main window is closed or refreshed
+  window.addEventListener("beforeunload", () => {
+    if (videoPopupWindow && !videoPopupWindow.closed) {
+      videoPopupWindow.close()
     }
   })
-
-  document.body.appendChild(playerOverlay)
 }
 
-function openFullPagePlayer() {
-  console.log("Opening full page player...")
-  console.log("Current embed code:", window.currentEmbedCode)
+function openVideoPlayer() {
+  console.log("Opening enhanced video player...")
 
   if (!window.currentEmbedCode) {
     showToast("Video not available", "error")
@@ -706,243 +675,466 @@ function openFullPagePlayer() {
     return
   }
 
-  const player = document.getElementById("full-page-player")
-  const videoContainer = document.getElementById("video-container")
-  const playerTitle = document.getElementById("player-movie-title")
-  const episodeInfo = document.getElementById("player-episode-info")
+  // Close existing popup if open
+  if (videoPopupWindow && !videoPopupWindow.closed) {
+    videoPopupWindow.close()
+  }
 
-  if (!player || !videoContainer) {
-    console.error("Player elements not found")
-    showToast("Player not initialized", "error")
+  const title = window.currentVideoTitle || currentMovie.title
+
+  // Create popup window with optimal settings for video playback
+  const popupFeatures = [
+    "width=1280",
+    "height=720",
+    "left=" + (screen.width / 2 - 640),
+    "top=" + (screen.height / 2 - 360),
+    "toolbar=no",
+    "location=no",
+    "directories=no",
+    "status=no",
+    "menubar=no",
+    "scrollbars=yes",
+    "resizable=yes",
+    "copyhistory=no",
+  ].join(",")
+
+  try {
+    videoPopupWindow = window.open("", "videoPlayer", popupFeatures)
+
+    if (!videoPopupWindow) {
+      // Fallback to full page player if popup is blocked
+      console.warn("Popup blocked, falling back to full page player")
+      openFullPagePlayer()
+      return
+    }
+
+    // Create enhanced video player HTML
+    const playerHTML = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${title} - CINESTREAM Player</title>
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
+          
+          body {
+            background: #000;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+          }
+          
+          .player-header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+          }
+          
+          .player-title {
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+          }
+          
+          .player-title i {
+            color: #ef4444;
+            margin-right: 8px;
+          }
+          
+          .player-controls {
+            display: flex;
+            gap: 8px;
+          }
+          
+          .control-btn {
+            background: #374151;
+            border: none;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+          }
+          
+          .control-btn:hover {
+            background: #4b5563;
+            transform: translateY(-1px);
+          }
+          
+          .close-btn {
+            background: #ef4444;
+          }
+          
+          .close-btn:hover {
+            background: #dc2626;
+          }
+          
+          .video-container {
+            flex: 1;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          
+          .video-wrapper {
+            width: 100%;
+            height: 100%;
+            position: relative;
+          }
+          
+          .video-wrapper iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
+            background: #000;
+          }
+          
+          .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ef4444;
+            font-size: 24px;
+            z-index: 10;
+          }
+          
+          .error-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            text-align: center;
+            z-index: 10;
+          }
+          
+          @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+          }
+          
+          .loading-spinner i {
+            animation: spin 1s linear infinite;
+          }
+          
+          .fullscreen-btn {
+            background: #059669;
+          }
+          
+          .fullscreen-btn:hover {
+            background: #047857;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="player-header">
+          <div class="player-title">
+            <i class="fas fa-play-circle"></i>
+            ${title}
+          </div>
+          <div class="player-controls">
+            <button class="control-btn fullscreen-btn" onclick="toggleFullscreen()" title="Toggle Fullscreen">
+              <i class="fas fa-expand"></i> Fullscreen
+            </button>
+            <button class="control-btn" onclick="reloadVideo()" title="Reload Video">
+              <i class="fas fa-redo"></i> Reload
+            </button>
+            <button class="control-btn close-btn" onclick="window.close()" title="Close Player">
+              <i class="fas fa-times"></i> Close
+            </button>
+          </div>
+        </div>
+        
+        <div class="video-container">
+          <div class="loading-spinner">
+            <i class="fas fa-spinner"></i>
+            <div style="margin-top: 10px; font-size: 14px;">Loading video...</div>
+          </div>
+          <div class="video-wrapper" id="videoWrapper">
+            ${window.currentEmbedCode}
+          </div>
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+        <script>
+          let isFullscreen = false;
+          
+          function toggleFullscreen() {
+            const elem = document.documentElement;
+            const btn = document.querySelector('.fullscreen-btn i');
+            
+            if (!isFullscreen) {
+              if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+              } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+              } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+              }
+              btn.className = 'fas fa-compress';
+              isFullscreen = true;
+            } else {
+              if (document.exitFullscreen) {
+                document.exitFullscreen();
+              } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+              } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+              }
+              btn.className = 'fas fa-expand';
+              isFullscreen = false;
+            }
+          }
+          
+          function reloadVideo() {
+            const wrapper = document.getElementById('videoWrapper');
+            const currentHTML = wrapper.innerHTML;
+            wrapper.innerHTML = '';
+            setTimeout(() => {
+              wrapper.innerHTML = currentHTML;
+              setupIframe();
+            }, 100);
+          }
+          
+          function setupIframe() {
+            const iframe = document.querySelector('iframe');
+            if (iframe) {
+              // Enhanced iframe attributes for better video playback
+              iframe.setAttribute('allowfullscreen', 'true');
+              iframe.setAttribute('webkitallowfullscreen', 'true');
+              iframe.setAttribute('mozallowfullscreen', 'true');
+              iframe.setAttribute('allow', 'autoplay; fullscreen; picture-in-picture; encrypted-media; gyroscope; accelerometer');
+              iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms allow-presentation');
+              iframe.style.width = '100%';
+              iframe.style.height = '100%';
+              iframe.style.border = 'none';
+              
+              // Hide loading spinner when iframe loads
+              iframe.onload = function() {
+                document.querySelector('.loading-spinner').style.display = 'none';
+              };
+              
+              iframe.onerror = function() {
+                document.querySelector('.loading-spinner').innerHTML = 
+                  '<div class="error-message"><i class="fas fa-exclamation-triangle"></i><br>Failed to load video</div>';
+              };
+            }
+          }
+          
+          // Setup iframe when page loads
+          window.onload = function() {
+            setupIframe();
+          };
+          
+          // Handle fullscreen change events
+          document.addEventListener('fullscreenchange', function() {
+            const btn = document.querySelector('.fullscreen-btn i');
+            if (document.fullscreenElement) {
+              btn.className = 'fas fa-compress';
+              isFullscreen = true;
+            } else {
+              btn.className = 'fas fa-expand';
+              isFullscreen = false;
+            }
+          });
+          
+          // Keyboard shortcuts
+          document.addEventListener('keydown', function(e) {
+            switch(e.key) {
+              case 'Escape':
+                if (isFullscreen) {
+                  toggleFullscreen();
+                } else {
+                  window.close();
+                }
+                break;
+              case 'F11':
+                e.preventDefault();
+                toggleFullscreen();
+                break;
+              case 'r':
+              case 'R':
+                if (e.ctrlKey) {
+                  e.preventDefault();
+                  reloadVideo();
+                }
+                break;
+            }
+          });
+          
+          // Prevent context menu on video
+          document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+          });
+        </script>
+      </body>
+      </html>
+    `
+
+    // Write the HTML to the popup window
+    videoPopupWindow.document.write(playerHTML)
+    videoPopupWindow.document.close()
+
+    // Focus the popup window
+    videoPopupWindow.focus()
+
+    showToast("Video player opened in new window", "success")
+
+    // Monitor popup window
+    const checkClosed = setInterval(() => {
+      if (videoPopupWindow.closed) {
+        clearInterval(checkClosed)
+        videoPopupWindow = null
+        console.log("Video popup closed")
+      }
+    }, 1000)
+  } catch (error) {
+    console.error("Error opening video popup:", error)
+    showToast("Failed to open video player", "error")
+    // Fallback to full page player
+    openFullPagePlayer()
+  }
+}
+
+// Fallback full page player (enhanced version)
+function openFullPagePlayer() {
+  console.log("Opening fallback full page player...")
+
+  if (!window.currentEmbedCode) {
+    showToast("Video not available", "error")
     return
   }
 
-  // Update player title
-  if (currentEpisode !== null && currentMovie.multipleDownloads) {
-    const episode = currentMovie.multipleDownloads[currentEpisode]
-    playerTitle.textContent = currentMovie.title
-    episodeInfo.textContent = episode.label
-  } else {
-    playerTitle.textContent = currentMovie.title
-    episodeInfo.textContent = ""
+  // Remove existing player if it exists
+  const existingPlayer = document.getElementById("full-page-player")
+  if (existingPlayer) {
+    existingPlayer.remove()
   }
 
-  // Show loading state
-  videoContainer.innerHTML = `
-    <div class="video-loading">
-      <div class="loading-spinner"></div>
-      <p>Loading video player...</p>
+  const title = window.currentVideoTitle || currentMovie.title
+
+  const playerOverlay = document.createElement("div")
+  playerOverlay.id = "full-page-player"
+  playerOverlay.className = "fixed inset-0 z-50 bg-black"
+  playerOverlay.innerHTML = `
+    <div class="flex flex-col h-full">
+      <div class="bg-gradient-to-r from-gray-900 to-gray-800 px-6 py-4 flex justify-between items-center border-b border-gray-700">
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-play-circle text-red-500 text-xl"></i>
+          <h3 class="text-white font-semibold text-lg">${title}</h3>
+        </div>
+        <div class="flex space-x-2">
+          <button onclick="reloadFullPageVideo()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded transition-colors">
+            <i class="fas fa-redo mr-2"></i>Reload
+          </button>
+          <button onclick="closeFullPagePlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors">
+            <i class="fas fa-times mr-2"></i>Close
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex-1 relative bg-black">
+        <div id="fullpage-loading" class="absolute inset-0 flex items-center justify-center">
+          <div class="text-center">
+            <i class="fas fa-spinner fa-spin text-4xl text-red-500 mb-4"></i>
+            <p class="text-white">Loading video...</p>
+          </div>
+        </div>
+        <div id="fullpage-video-container" class="w-full h-full">
+          ${window.currentEmbedCode}
+        </div>
+      </div>
     </div>
   `
 
-  // Show player immediately
-  player.classList.remove("hidden")
-  isFullPagePlayer = true
+  document.body.appendChild(playerOverlay)
   document.body.style.overflow = "hidden"
+  isFullPagePlayer = true
 
-  // Process and load the embed code
+  // Setup iframe
   setTimeout(() => {
-    try {
-      let processedEmbedCode = window.currentEmbedCode.trim()
-
-      // Extract iframe from embed code if it's wrapped in other HTML
-      const iframeMatch = processedEmbedCode.match(/<iframe[^>]*>.*?<\/iframe>/i)
-      if (iframeMatch) {
-        processedEmbedCode = iframeMatch[0]
-      }
-
-      // Create a temporary div to parse the iframe
-      const tempDiv = document.createElement("div")
-      tempDiv.innerHTML = processedEmbedCode
-      const iframe = tempDiv.querySelector("iframe")
-
-      if (!iframe) {
-        throw new Error("No iframe found in embed code")
-      }
-
-      // Get the original src
-      let src = iframe.src || iframe.getAttribute("data-src")
-      if (!src) {
-        throw new Error("No src found in iframe")
-      }
-
-      // Enhance iframe attributes for better playback
-      iframe.setAttribute("width", "100%")
-      iframe.setAttribute("height", "100%")
-      iframe.setAttribute("frameborder", "0")
+    const iframe = playerOverlay.querySelector("iframe")
+    if (iframe) {
       iframe.setAttribute("allowfullscreen", "true")
       iframe.setAttribute("webkitallowfullscreen", "true")
       iframe.setAttribute("mozallowfullscreen", "true")
-      iframe.setAttribute(
-        "allow",
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-      )
-      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin")
-      iframe.setAttribute("sandbox", "allow-same-origin allow-scripts allow-popups allow-forms allow-presentation")
+      iframe.setAttribute("allow", "autoplay; fullscreen; picture-in-picture; encrypted-media")
+      iframe.style.width = "100%"
+      iframe.style.height = "100%"
+      iframe.style.border = "none"
 
-      // Add autoplay parameter to src if not present
-      if (src.includes("youtube.com") || src.includes("youtu.be")) {
-        if (!src.includes("autoplay=")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
-        }
-      } else if (src.includes("vimeo.com")) {
-        if (!src.includes("autoplay=")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&muted=0&controls=1"
-        }
-      } else {
-        // For other embed sources, try to add common autoplay parameters
-        if (!src.includes("autoplay")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&controls=1"
-        }
+      iframe.onload = () => {
+        document.getElementById("fullpage-loading").style.display = "none"
+        showToast("Video loaded successfully", "success")
       }
 
-      iframe.src = src
-
-      // Style the iframe
-      iframe.style.cssText = `
-        width: 100% !important;
-        height: 100% !important;
-        border: none !important;
-        border-radius: 12px !important;
-        background: #000 !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
-      `
-
-      // Create the video container with enhanced styling
-      videoContainer.innerHTML = `
-        <div class="embedded-video-container">
-          <div class="video-wrapper">
-            ${iframe.outerHTML}
-          </div>
-          <div class="video-overlay" id="video-overlay">
-            <div class="video-info">
-              <h4>${currentMovie.title}</h4>
-              ${
-                currentEpisode !== null && currentMovie.multipleDownloads
-                  ? `<p>${currentMovie.multipleDownloads[currentEpisode].label}</p>`
-                  : ""
-              }
-            </div>
-          </div>
-        </div>
-      `
-
-      // Add load event listeners
-      const newIframe = videoContainer.querySelector("iframe")
-      if (newIframe) {
-        newIframe.onload = () => {
-          console.log("Video iframe loaded successfully")
-          showToast("Video loaded successfully", "success")
-
-          // Hide overlay after a short delay
-          setTimeout(() => {
-            const overlay = document.getElementById("video-overlay")
-            if (overlay) {
-              overlay.style.opacity = "0"
-              setTimeout(() => (overlay.style.display = "none"), 300)
-            }
-          }, 2000)
-        }
-
-        newIframe.onerror = () => {
-          console.error("Video iframe failed to load")
-          showToast("Failed to load video", "error")
-          videoContainer.innerHTML = `
-            <div class="video-error">
-              <i class="fas fa-exclamation-triangle"></i>
-              <h3>Video Unavailable</h3>
-              <p>The video could not be loaded. Please try again later.</p>
-              <button onclick="closeFullPagePlayer()" class="retry-btn">Close Player</button>
-            </div>
-          `
-        }
-
-        // Try to focus on iframe for better user experience
-        setTimeout(() => {
-          try {
-            newIframe.focus()
-          } catch (e) {
-            console.log("Could not focus iframe:", e)
-          }
-        }, 1000)
+      iframe.onerror = () => {
+        document.getElementById("fullpage-loading").innerHTML =
+          '<div class="text-center"><i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i><p class="text-white">Failed to load video</p></div>'
       }
-    } catch (error) {
-      console.error("Error processing embed code:", error)
-      showToast("Error loading video player", "error")
-      videoContainer.innerHTML = `
-        <div class="video-error">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h3>Player Error</h3>
-          <p>There was an error loading the video player.</p>
-          <button onclick="closeFullPagePlayer()" class="retry-btn">Close Player</button>
-        </div>
-      `
     }
-  }, 500)
-
-  console.log("Full page player opened")
+  }, 100)
 }
 
 function closeFullPagePlayer() {
-  console.log("Closing full page player...")
-
   const player = document.getElementById("full-page-player")
   if (player) {
-    // Add closing animation
-    player.style.opacity = "0"
-    player.style.transform = "scale(0.95)"
-
-    setTimeout(() => {
-      player.classList.add("hidden")
-      player.style.opacity = "1"
-      player.style.transform = "scale(1)"
-      isFullPagePlayer = false
-      document.body.style.overflow = "auto"
-
-      // Clear video content to stop playback
-      const videoContainer = document.getElementById("video-container")
-      if (videoContainer) {
-        videoContainer.innerHTML = `
-          <div class="video-loading">
-            <div class="loading-spinner"></div>
-            <p>Loading video...</p>
-          </div>
-        `
-      }
-    }, 200)
+    player.remove()
+    document.body.style.overflow = "auto"
+    isFullPagePlayer = false
   }
 }
 
-function togglePlayerFullscreen() {
-  const player = document.getElementById("full-page-player")
-  const fullscreenBtn = player.querySelector(".fullscreen-btn i")
+function reloadFullPageVideo() {
+  const container = document.getElementById("fullpage-video-container")
+  const loading = document.getElementById("fullpage-loading")
 
-  if (!document.fullscreenElement) {
-    player
-      .requestFullscreen()
-      .then(() => {
-        fullscreenBtn.classList.remove("fa-expand")
-        fullscreenBtn.classList.add("fa-compress")
-      })
-      .catch((err) => {
-        console.log("Error attempting to enable fullscreen:", err)
-      })
-  } else {
-    document.exitFullscreen().then(() => {
-      fullscreenBtn.classList.remove("fa-compress")
-      fullscreenBtn.classList.add("fa-expand")
-    })
+  if (container && loading) {
+    loading.style.display = "flex"
+    container.innerHTML = ""
+
+    setTimeout(() => {
+      container.innerHTML = window.currentEmbedCode
+      const iframe = container.querySelector("iframe")
+      if (iframe) {
+        iframe.setAttribute("allowfullscreen", "true")
+        iframe.setAttribute("webkitallowfullscreen", "true")
+        iframe.setAttribute("mozallowfullscreen", "true")
+        iframe.setAttribute("allow", "autoplay; fullscreen; picture-in-picture; encrypted-media")
+        iframe.style.width = "100%"
+        iframe.style.height = "100%"
+        iframe.style.border = "none"
+
+        iframe.onload = () => {
+          loading.style.display = "none"
+        }
+      }
+    }, 500)
   }
 }
 
 // Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
-  if (!isFullPagePlayer) return
-
-  switch (e.key) {
-    case "Escape":
-      closeFullPagePlayer()
-      break
+  if (isFullPagePlayer && e.key === "Escape") {
+    closeFullPagePlayer()
   }
 })
 
@@ -958,7 +1150,14 @@ function toggleSearch() {
 // Global error handler
 window.addEventListener("error", (e) => {
   console.error("JavaScript error:", e.error)
-  if (e.error && e.error.message && e.error.message.includes("openFullPagePlayer")) {
+  if (e.error && e.error.message && e.error.message.includes("openVideoPlayer")) {
     showToast("Error opening video player", "error")
+  }
+})
+
+// Cleanup on page unload
+window.addEventListener("beforeunload", () => {
+  if (videoPopupWindow && !videoPopupWindow.closed) {
+    videoPopupWindow.close()
   }
 })
