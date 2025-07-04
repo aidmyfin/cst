@@ -3,84 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CINESTREAM - Watch Movies Online</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <title>CineStream - Movie Streaming Platform</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
-<body class="bg-black text-white">
+<body>
     <!-- Header -->
-    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent">
-        <div class="container mx-auto px-4 md:px-6">
-            <div class="flex h-16 items-center justify-between">
-                <div class="flex items-center space-x-4">
-                    <a href="index.html" class="flex items-center space-x-2">
-                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
+    <header id="header" class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="back-btn" class="back-btn hidden">
+                        <i data-lucide="arrow-left"></i>
+                    </button>
+                    <a href="index.html" class="logo">
+                        <div class="logo-text">CINESTREAM</div>
                     </a>
+                    <h1 id="page-title" class="page-title hidden"></h1>
                 </div>
 
-                <nav class="hidden md:flex items-center space-x-8">
-                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors text-red-400">Home</a>
-                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
-                    <a href="downloads.html" class="text-white hover:text-gray-300 font-medium transition-colors flex items-center space-x-1">
-                        <i class="fas fa-download"></i>
+                <nav class="nav-desktop">
+                    <a href="index.html" class="nav-link active">Home</a>
+                    <a href="movies.html" class="nav-link">Movies</a>
+                    <a href="downloads-center.html" class="nav-link">
+                        <i data-lucide="download"></i>
                         <span>Downloads</span>
                     </a>
-                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors">Categories</a>
-                    <a href="all-movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">All Movies A-Z</a>
-                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors">Search</a>
-                    <a href="latest.html" class="text-white hover:text-gray-300 font-medium transition-colors">Latest Movies</a>
+                    <a href="categories.html" class="nav-link">Categories</a>
+                    <a href="all-movies.html" class="nav-link">All Movies A-Z</a>
+                    <a href="search.html" class="nav-link">Search</a>
+                    <a href="latest-movies.html" class="nav-link">Latest Movies</a>
                 </nav>
 
-                <div class="flex items-center space-x-2 md:space-x-4">
-                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleSearch()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
-                        <i class="fas fa-bars" id="mobile-menu-icon"></i>
+                <div class="header-right">
+                    <div class="search-container">
+                        <input type="text" id="search-input" class="search-input hidden" placeholder="Search...">
+                        <button id="search-btn" class="search-btn">
+                            <i data-lucide="search"></i>
+                        </button>
+                    </div>
+                    <a href="search.html" class="search-btn-mobile">
+                        <i data-lucide="search"></i>
+                    </a>
+                    <button id="mobile-menu-btn" class="mobile-menu-btn">
+                        <i data-lucide="menu"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Mobile Menu -->
-            <div id="mobile-menu" class="md:hidden border-t border-gray-800 bg-black/95 backdrop-blur-xl hidden">
-                <nav class="py-4 space-y-2">
-                    <a href="index.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors bg-red-600">Home</a>
-                    <a href="movies.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Movies</a>
-                    <a href="downloads.html" class="flex items-center px-4 py-2 text-white hover:bg-gray-800 transition-colors">
-                        <i class="fas fa-download mr-2"></i>
+            <div id="mobile-menu" class="mobile-menu hidden">
+                <nav class="mobile-nav">
+                    <a href="index.html" class="mobile-nav-link active">Home</a>
+                    <a href="movies.html" class="mobile-nav-link">Movies</a>
+                    <a href="downloads-center.html" class="mobile-nav-link">
+                        <i data-lucide="download"></i>
                         Downloads Center
                     </a>
-                    <a href="categories.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Categories</a>
-                    <a href="all-movies.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">All Movies A-Z</a>
-                    <a href="latest.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Latest Movies</a>
+                    <a href="categories.html" class="mobile-nav-link">Categories</a>
+                    <a href="all-movies.html" class="mobile-nav-link">All Movies A-Z</a>
+                    <a href="latest-movies.html" class="mobile-nav-link">Latest Movies</a>
                 </nav>
             </div>
         </div>
     </header>
 
-    <main class="pt-16">
+    <!-- Main Content -->
+    <main class="main">
         <!-- Hero Banner -->
-        <section class="relative h-[70vh] bg-gradient-to-br from-gray-900 to-black overflow-hidden">
-            <div id="hero-slider" class="relative w-full h-full">
-                <!-- Hero slides will be populated by JavaScript -->
-            </div>
-            
-            <!-- Hero Content -->
-            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent">
-                <div class="container mx-auto px-4 h-full flex items-center">
-                    <div class="max-w-2xl">
-                        <h1 id="hero-title" class="text-4xl md:text-6xl font-bold mb-4">Welcome to CINESTREAM</h1>
-                        <p id="hero-description" class="text-lg md:text-xl text-gray-300 mb-8">Discover and watch the latest movies in high quality</p>
-                        <div class="flex flex-wrap gap-4">
-                            <button class="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-colors">
-                                <i class="fas fa-play"></i>
-                                <span>Watch Now</span>
-                            </button>
-                            <button class="bg-gray-800 hover:bg-gray-700 text-white px-8 py-3 rounded-lg font-semibold flex items-center space-x-2 transition-colors">
-                                <i class="fas fa-info-circle"></i>
-                                <span>More Info</span>
-                            </button>
+        <section id="hero-banner" class="hero-banner">
+            <div class="hero-slide active">
+                <div class="hero-bg"></div>
+                <div class="hero-content">
+                    <div class="container">
+                        <div class="hero-info">
+                            <h1 class="hero-title">Featured Movie</h1>
+                            <p class="hero-description">Loading amazing content...</p>
+                            <div class="hero-meta">
+                                <span class="hero-year">2024</span>
+                                <span class="hero-rating">
+                                    <i data-lucide="star"></i>
+                                    <span>8.5</span>
+                                </span>
+                                <span class="hero-duration">2h 30m</span>
+                            </div>
+                            <div class="hero-actions">
+                                <button class="btn btn-primary">
+                                    <i data-lucide="play"></i>
+                                    Watch Now
+                                </button>
+                                <button class="btn btn-secondary">
+                                    <i data-lucide="info"></i>
+                                    More Info
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,129 +107,215 @@
         </section>
 
         <!-- Navigation Sections -->
-        <div class="px-4 md:px-6 lg:px-8 py-8 space-y-12">
+        <div class="container">
             <!-- Category Pills -->
-            <section>
-                <div class="flex flex-wrap gap-3 justify-center">
-                    <a href="categories.html" class="bg-gray-800 hover:bg-red-600 text-white px-6 py-3 rounded-full transition-colors">
-                        <i class="fas fa-fire mr-2"></i>Action
-                    </a>
-                    <a href="categories.html" class="bg-gray-800 hover:bg-red-600 text-white px-6 py-3 rounded-full transition-colors">
-                        <i class="fas fa-laugh mr-2"></i>Comedy
-                    </a>
-                    <a href="categories.html" class="bg-gray-800 hover:bg-red-600 text-white px-6 py-3 rounded-full transition-colors">
-                        <i class="fas fa-theater-masks mr-2"></i>Drama
-                    </a>
-                    <a href="categories.html" class="bg-gray-800 hover:bg-red-600 text-white px-6 py-3 rounded-full transition-colors">
-                        <i class="fas fa-ghost mr-2"></i>Horror
-                    </a>
-                    <a href="categories.html" class="bg-gray-800 hover:bg-red-600 text-white px-6 py-3 rounded-full transition-colors">
-                        <i class="fas fa-rocket mr-2"></i>Sci-Fi
-                    </a>
+            <section class="category-pills-section">
+                <div class="section-header">
+                    <h2 class="section-title">Browse by Genre</h2>
+                    <a href="categories.html" class="view-all-link">View All</a>
+                </div>
+                <div class="category-pills">
+                    <div class="category-pill" data-category="action">
+                        <span class="category-icon">💥</span>
+                        Action
+                    </div>
+                    <div class="category-pill" data-category="comedy">
+                        <span class="category-icon">😂</span>
+                        Comedy
+                    </div>
+                    <div class="category-pill" data-category="drama">
+                        <span class="category-icon">🎭</span>
+                        Drama
+                    </div>
+                    <div class="category-pill" data-category="horror">
+                        <span class="category-icon">👻</span>
+                        Horror
+                    </div>
+                    <div class="category-pill" data-category="romance">
+                        <span class="category-icon">💕</span>
+                        Romance
+                    </div>
+                    <div class="category-pill" data-category="sci-fi">
+                        <span class="category-icon">🚀</span>
+                        Sci-Fi
+                    </div>
+                    <div class="category-pill" data-category="thriller">
+                        <span class="category-icon">🔥</span>
+                        Thriller
+                    </div>
+                    <div class="category-pill" data-category="animation">
+                        <span class="category-icon">🎨</span>
+                        Animation
+                    </div>
                 </div>
             </section>
 
             <!-- Alphabet Slider -->
-            <section>
-                <div class="flex flex-wrap gap-2 justify-center">
-                    <a href="alphabet.html?letter=a" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">A</a>
-                    <a href="alphabet.html?letter=b" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">B</a>
-                    <a href="alphabet.html?letter=c" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">C</a>
-                    <a href="alphabet.html?letter=d" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">D</a>
-                    <a href="alphabet.html?letter=e" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">E</a>
-                    <a href="alphabet.html?letter=f" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">F</a>
-                    <a href="alphabet.html?letter=g" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">G</a>
-                    <a href="alphabet.html?letter=h" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">H</a>
-                    <a href="alphabet.html?letter=i" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">I</a>
-                    <a href="alphabet.html?letter=j" class="bg-gray-800 hover:bg-red-600 text-white w-10 h-10 rounded-full flex items-center justify-center transition-colors">J</a>
-                    <a href="all-movies.html" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-full transition-colors">View All</a>
+            <section class="alphabet-section">
+                <div class="section-header">
+                    <h2 class="section-title">Browse A-Z</h2>
+                    <a href="all-movies.html" class="view-all-link">View All</a>
+                </div>
+                <div class="alphabet-slider">
+                    <div class="alphabet-letters">
+                        <div class="alphabet-letter" data-letter="A">A</div>
+                        <div class="alphabet-letter" data-letter="B">B</div>
+                        <div class="alphabet-letter" data-letter="C">C</div>
+                        <div class="alphabet-letter" data-letter="D">D</div>
+                        <div class="alphabet-letter" data-letter="E">E</div>
+                        <div class="alphabet-letter" data-letter="F">F</div>
+                        <div class="alphabet-letter" data-letter="G">G</div>
+                        <div class="alphabet-letter" data-letter="H">H</div>
+                        <div class="alphabet-letter" data-letter="I">I</div>
+                        <div class="alphabet-letter" data-letter="J">J</div>
+                        <div class="alphabet-letter" data-letter="K">K</div>
+                        <div class="alphabet-letter" data-letter="L">L</div>
+                        <div class="alphabet-letter" data-letter="M">M</div>
+                        <div class="alphabet-letter" data-letter="N">N</div>
+                        <div class="alphabet-letter" data-letter="O">O</div>
+                        <div class="alphabet-letter" data-letter="P">P</div>
+                        <div class="alphabet-letter" data-letter="Q">Q</div>
+                        <div class="alphabet-letter" data-letter="R">R</div>
+                        <div class="alphabet-letter" data-letter="S">S</div>
+                        <div class="alphabet-letter" data-letter="T">T</div>
+                        <div class="alphabet-letter" data-letter="U">U</div>
+                        <div class="alphabet-letter" data-letter="V">V</div>
+                        <div class="alphabet-letter" data-letter="W">W</div>
+                        <div class="alphabet-letter" data-letter="X">X</div>
+                        <div class="alphabet-letter" data-letter="Y">Y</div>
+                        <div class="alphabet-letter" data-letter="Z">Z</div>
+                    </div>
                 </div>
             </section>
         </div>
 
         <!-- Movie Rows -->
-        <div class="space-y-8 md:space-y-12 py-8 md:py-12 pb-20 md:pb-8">
-            <!-- Trending Movies -->
-            <section class="movie-row">
-                <div class="px-4 md:px-6 lg:px-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-fire text-red-500 mr-3"></i>
-                        Trending Now
-                    </h2>
-                    <div id="trending-movies" class="movie-grid">
-                        <!-- Movies will be populated by JavaScript -->
+        <div class="movie-rows">
+            <div id="trending-row" class="movie-row">
+                <div class="container">
+                    <div class="row-header">
+                        <h2 class="row-title">🔥 Trending Now</h2>
+                        <button class="scroll-btn scroll-left hidden">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <button class="scroll-btn scroll-right">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="movies-container">
+                        <div class="movies-scroll">
+                            <!-- Movies will be loaded here -->
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- New Releases -->
-            <section class="movie-row">
-                <div class="px-4 md:px-6 lg:px-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-plus text-green-500 mr-3"></i>
-                        New Releases
-                    </h2>
-                    <div id="new-movies" class="movie-grid">
-                        <!-- Movies will be populated by JavaScript -->
+            <div id="new-releases-row" class="movie-row">
+                <div class="container">
+                    <div class="row-header">
+                        <h2 class="row-title">🆕 New Releases</h2>
+                        <button class="scroll-btn scroll-left hidden">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <button class="scroll-btn scroll-right">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="movies-container">
+                        <div class="movies-scroll">
+                            <!-- Movies will be loaded here -->
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Action Movies -->
-            <section class="movie-row">
-                <div class="px-4 md:px-6 lg:px-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-bolt text-yellow-500 mr-3"></i>
-                        Action Movies
-                    </h2>
-                    <div id="action-movies" class="movie-grid">
-                        <!-- Movies will be populated by JavaScript -->
+            <div id="action-row" class="movie-row">
+                <div class="container">
+                    <div class="row-header">
+                        <h2 class="row-title">⚡ Action Movies</h2>
+                        <button class="scroll-btn scroll-left hidden">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <button class="scroll-btn scroll-right">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="movies-container">
+                        <div class="movies-scroll">
+                            <!-- Movies will be loaded here -->
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            <!-- Comedy Movies -->
-            <section class="movie-row">
-                <div class="px-4 md:px-6 lg:px-8">
-                    <h2 class="text-2xl md:text-3xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-laugh text-blue-500 mr-3"></i>
-                        Comedy Movies
-                    </h2>
-                    <div id="comedy-movies" class="movie-grid">
-                        <!-- Movies will be populated by JavaScript -->
+            <div id="drama-row" class="movie-row">
+                <div class="container">
+                    <div class="row-header">
+                        <h2 class="row-title">🎭 Drama</h2>
+                        <button class="scroll-btn scroll-left hidden">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <button class="scroll-btn scroll-right">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="movies-container">
+                        <div class="movies-scroll">
+                            <!-- Movies will be loaded here -->
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <div id="comedy-row" class="movie-row">
+                <div class="container">
+                    <div class="row-header">
+                        <h2 class="row-title">😂 Comedy</h2>
+                        <button class="scroll-btn scroll-left hidden">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <button class="scroll-btn scroll-right">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="movies-container">
+                        <div class="movies-scroll">
+                            <!-- Movies will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
     <!-- Mobile Navigation -->
-    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
-        <div class="flex items-center justify-around py-2">
-            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-red-500 bg-red-500/10">
-                <i class="fas fa-home mb-1"></i>
-                <span class="text-xs font-medium">Home</span>
-            </a>
-            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fas fa-search mb-1"></i>
-                <span class="text-xs font-medium">Search</span>
-            </a>
-            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fas fa-download mb-1"></i>
-                <span class="text-xs font-medium">Downloads</span>
-            </a>
-            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fas fa-th-large mb-1"></i>
-                <span class="text-xs font-medium">Categories</span>
-            </a>
-            <a href="#" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
-                <i class="fas fa-user mb-1"></i>
-                <span class="text-xs font-medium">Profile</span>
-            </a>
-        </div>
-    </div>
+    <nav class="mobile-nav-bottom">
+        <a href="index.html" class="mobile-nav-item active">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+        </a>
+        <a href="search.html" class="mobile-nav-item">
+            <i data-lucide="search"></i>
+            <span>Search</span>
+        </a>
+        <a href="categories.html" class="mobile-nav-item">
+            <i data-lucide="grid-3x3"></i>
+            <span>Categories</span>
+        </a>
+        <a href="downloads.html" class="mobile-nav-item">
+            <i data-lucide="download"></i>
+            <span>Downloads</span>
+        </a>
+        <a href="movies.html" class="mobile-nav-item">
+            <i data-lucide="film"></i>
+            <span>Movies</span>
+        </a>
+    </nav>
 
-    <script src="data.js"></script>
-    <script src="script.js"></script>
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
