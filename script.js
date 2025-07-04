@@ -1,355 +1,272 @@
-// Search page JavaScript
+// Main JavaScript for CINESTREAM website
 
-let currentFilters = {
-  genres: [],
-  yearRange: [1990, 2025],
-  ratingRange: [0, 10],
-  quality: [],
-}
+// Global variables
+let currentSlide = 0
+const isSearchVisible = false
 
-let currentSearchQuery = ""
-let currentPage = 1
-const itemsPerPage = 20
-
+// Initialize the website
 document.addEventListener("DOMContentLoaded", () => {
-  initializeSearchPage()
-  initializeFilters()
-  loadInitialResults()
+  initializeHeroSlider()
+  loadMovieRows()
+  initializeSearch()
+  initializeMobileMenu()
+  initializeScrollEffects()
 })
 
-function initializeSearchPage() {
-  const searchInput = document.getElementById("search-input")
-  const searchButton = document.getElementById("search-button")
+// Hero slider functionality
+function initializeHeroSlider() {
+  const heroSlider = document.getElementById("hero-slider")
+  if (!heroSlider) return
 
-  if (searchInput) {
-    searchInput.addEventListener("input", debounce(handleSearchInput, 300))
-    searchInput.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        performSearch()
-      }
-    })
-  }
+  const featuredMovies = window.movieData.getFeaturedMovies().slice(0, 5)
 
-  if (searchButton) {
-    searchButton.addEventListener("click", performSearch)
-  }
-
-  // Get search query from URL if present
-  const urlParams = new URLSearchParams(window.location.search)
-  const query = urlParams.get("q")
-  if (query) {
-    currentSearchQuery = query
-    if (searchInput) {
-      searchInput.value = query
-    }
-    performSearch()
-  }
-}
-
-function initializeFilters() {
-  initializeGenreFilters()
-  initializeYearFilter()
-  initializeRatingFilter()
-  initializeQualityFilter()
-}
-
-function initializeGenreFilters() {
-  const genreContainer = document.getElementById("genre-filters")
-  if (!genreContainer) return
-
-  const genres = [
-    "Action",
-    "Comedy",
-    "Drama",
-    "Horror",
-    "Thriller",
-    "Sci-Fi",
-    "Romance",
-    "Animation",
-    "Crime",
-    "Adventure",
-  ]
-
-  genreContainer.innerHTML = genres
-    .map(
-      (genre) => `
-        <label class="filter-checkbox">
-            <input type="checkbox" value="${genre}" onchange="updateGenreFilter('${genre}', this.checked)">
-            <span class="checkmark"></span>
-            ${genre}
-        </label>
-    `,
-    )
-    .join("")
-}
-
-function initializeYearFilter() {
-  const yearSlider = document.getElementById("year-slider")
-  if (!yearSlider) return
-
-  // Initialize year range slider (would need a slider library in real implementation)
-  yearSlider.innerHTML = `
-    <div class="range-slider">
-        <input type="range" min="1990" max="2025" value="1990" id="year-min" onchange="updateYearFilter()">
-        <input type="range" min="1990" max="2025" value="2025" id="year-max" onchange="updateYearFilter()">
-        <div class="range-values">
-            <span id="year-min-value">1990</span> - <span id="year-max-value">2025</span>
+  featuredMovies.forEach((movie, index) => {
+    const slide = document.createElement("div")
+    slide.className = `hero-slide ${index === 0 ? "active" : ""}`
+    slide.style.backgroundImage = `url(${movie.backdrop || movie.poster})`
+    slide.innerHTML = `
+      <div class="hero-content">
+        <h1 class="hero-title">${movie.title}</h1>
+        <p class="hero-description">${movie.description}</p>
+        <div class="hero-actions">
+          <button onclick="goToMovie('${movie.slug}')" class="btn-primary">
+            <i class="fas fa-play"></i> Watch Now
+          </button>
+          <button onclick="goToMovie('${movie.slug}')" class="btn-secondary">
+            <i class="fas fa-info-circle"></i> More Info
+          </button>
         </div>
-    </div>
-  `
-}
-
-function initializeRatingFilter() {
-  const ratingSlider = document.getElementById("rating-slider")
-  if (!ratingSlider) return
-
-  ratingSlider.innerHTML = `
-    <div class="range-slider">
-        <input type="range" min="0" max="10" step="0.1" value="0" id="rating-min" onchange="updateRatingFilter()">
-        <input type="range" min="0" max="10" step="0.1" value="10" id="rating-max" onchange="updateRatingFilter()">
-        <div class="range-values">
-            <span id="rating-min-value">0</span> - <span id="rating-max-value">10</span>
-        </div>
-    </div>
-  `
-}
-
-function initializeQualityFilter() {
-  const qualityContainer = document.getElementById("quality-filters")
-  if (!qualityContainer) return
-
-  const qualities = ["4K", "HD", "WEBRip"]
-
-  qualityContainer.innerHTML = qualities
-    .map(
-      (quality) => `
-        <label class="filter-checkbox">
-            <input type="checkbox" value="${quality}" onchange="updateQualityFilter('${quality}', this.checked)">
-            <span class="checkmark"></span>
-            ${quality}
-        </label>
-    `,
-    )
-    .join("")
-}
-
-function handleSearchInput(event) {
-  currentSearchQuery = event.target.value.trim()
-  if (currentSearchQuery.length > 0) {
-    performSearch()
-  } else {
-    loadInitialResults()
-  }
-}
-
-function performSearch() {
-  currentPage = 1
-  const results = window.movieData.searchMovies(currentSearchQuery, currentFilters)
-  displayResults(results)
-  updateURL()
-}
-
-function loadInitialResults() {
-  const allMovies = window.movieData.getAllMovies()
-  displayResults(allMovies)
-}
-
-function displayResults(results) {
-  const resultsContainer = document.getElementById("search-results")
-  const resultsCount = document.getElementById("results-count")
-
-  if (!resultsContainer) return
-
-  // Update results count
-  if (resultsCount) {
-    resultsCount.textContent = `${results.length} movies found`
-  }
-
-  if (results.length === 0) {
-    resultsContainer.innerHTML = `
-      <div class="no-results">
-          <i class="fas fa-search text-6xl text-gray-600 mb-4"></i>
-          <h3 class="text-2xl font-bold text-white mb-2">No movies found</h3>
-          <p class="text-gray-400">Try adjusting your search criteria</p>
       </div>
     `
-    return
-  }
+    heroSlider.appendChild(slide)
+  })
 
-  // Paginate results
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const paginatedResults = results.slice(startIndex, endIndex)
+  // Auto-advance slides
+  setInterval(() => {
+    nextSlide()
+  }, 5000)
+}
 
-  resultsContainer.innerHTML = paginatedResults
+function nextSlide() {
+  const slides = document.querySelectorAll(".hero-slide")
+  if (slides.length === 0) return
+
+  slides[currentSlide].classList.remove("active")
+  currentSlide = (currentSlide + 1) % slides.length
+  slides[currentSlide].classList.add("active")
+}
+
+// Load movie rows
+function loadMovieRows() {
+  loadTrendingMovies()
+  loadNewMovies()
+  loadActionMovies()
+  loadComedyMovies()
+}
+
+function loadTrendingMovies() {
+  const container = document.getElementById("trending-movies")
+  if (!container) return
+
+  const movies = window.movieData.getTrendingMovies().slice(0, 12)
+  renderMovieGrid(container, movies)
+}
+
+function loadNewMovies() {
+  const container = document.getElementById("new-movies")
+  if (!container) return
+
+  const movies = window.movieData.getNewMovies().slice(0, 12)
+  renderMovieGrid(container, movies)
+}
+
+function loadActionMovies() {
+  const container = document.getElementById("action-movies")
+  if (!container) return
+
+  const movies = window.movieData.getMoviesByGenre("Action").slice(0, 12)
+  renderMovieGrid(container, movies)
+}
+
+function loadComedyMovies() {
+  const container = document.getElementById("comedy-movies")
+  if (!container) return
+
+  const movies = window.movieData.getMoviesByGenre("Comedy").slice(0, 12)
+  renderMovieGrid(container, movies)
+}
+
+// Render movie grid
+function renderMovieGrid(container, movies) {
+  if (!container || !movies.length) return
+
+  container.innerHTML = movies
     .map(
       (movie) => `
-        <div class="search-result-card" onclick="goToMovie('${movie.slug}')">
+        <div class="movie-card" onclick="goToMovie('${movie.slug}')">
             <div class="movie-poster">
                 <img src="${movie.poster}" alt="${movie.title}" loading="lazy">
                 <div class="movie-overlay">
                     <div class="play-button">
                         <i class="fas fa-play"></i>
                     </div>
+                    <div class="movie-info-overlay">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-meta">
+                            <span class="quality">${movie.quality}</span>
+                            <span class="rating">
+                                <i class="fas fa-star"></i>
+                                ${movie.rating}
+                            </span>
+                        </div>
+                    </div>
                 </div>
-                <div class="quality-badge">${movie.quality}</div>
-            </div>
-            <div class="movie-info">
-                <h3 class="movie-title">${movie.title}</h3>
-                <div class="movie-meta">
-                    <span class="year">${movie.year}</span>
-                    <span class="rating">
-                        <i class="fas fa-star text-yellow-400"></i>
-                        ${movie.rating}
-                    </span>
-                    <span class="views">${formatViews(movie.views)} views</span>
-                </div>
-                <div class="movie-genres">
-                    ${movie.genre
-                      .slice(0, 3)
-                      .map((g) => `<span class="genre-tag">${g}</span>`)
-                      .join("")}
-                </div>
-                <p class="movie-description">${movie.description.substring(0, 120)}...</p>
             </div>
         </div>
     `,
     )
     .join("")
-
-  // Update pagination
-  updatePagination(results.length)
 }
 
-function updatePagination(totalResults) {
-  const paginationContainer = document.getElementById("pagination")
-  if (!paginationContainer) return
-
-  const totalPages = Math.ceil(totalResults / itemsPerPage)
-
-  if (totalPages <= 1) {
-    paginationContainer.innerHTML = ""
-    return
-  }
-
-  let paginationHTML = ""
-
-  // Previous button
-  if (currentPage > 1) {
-    paginationHTML += `<button onclick="changePage(${currentPage - 1})" class="pagination-btn">Previous</button>`
-  }
-
-  // Page numbers
-  for (let i = Math.max(1, currentPage - 2); i <= Math.min(totalPages, currentPage + 2); i++) {
-    paginationHTML += `
-      <button onclick="changePage(${i})" class="pagination-btn ${i === currentPage ? "active" : ""}">${i}</button>
-    `
-  }
-
-  // Next button
-  if (currentPage < totalPages) {
-    paginationHTML += `<button onclick="changePage(${currentPage + 1})" class="pagination-btn">Next</button>`
-  }
-
-  paginationContainer.innerHTML = paginationHTML
-}
-
-function changePage(page) {
-  currentPage = page
-  performSearch()
-  window.scrollTo({ top: 0, behavior: "smooth" })
-}
-
-// Filter update functions
-function updateGenreFilter(genre, checked) {
-  if (checked) {
-    currentFilters.genres.push(genre)
-  } else {
-    currentFilters.genres = currentFilters.genres.filter((g) => g !== genre)
-  }
-  performSearch()
-}
-
-function updateYearFilter() {
-  const minYear = document.getElementById("year-min")?.value || 1990
-  const maxYear = document.getElementById("year-max")?.value || 2025
-
-  currentFilters.yearRange = [Number.parseInt(minYear), Number.parseInt(maxYear)]
-
-  // Update display values
-  const minValue = document.getElementById("year-min-value")
-  const maxValue = document.getElementById("year-max-value")
-  if (minValue) minValue.textContent = minYear
-  if (maxValue) maxValue.textContent = maxYear
-
-  performSearch()
-}
-
-function updateRatingFilter() {
-  const minRating = document.getElementById("rating-min")?.value || 0
-  const maxRating = document.getElementById("rating-max")?.value || 10
-
-  currentFilters.ratingRange = [Number.parseFloat(minRating), Number.parseFloat(maxRating)]
-
-  // Update display values
-  const minValue = document.getElementById("rating-min-value")
-  const maxValue = document.getElementById("rating-max-value")
-  if (minValue) minValue.textContent = minRating
-  if (maxValue) maxValue.textContent = maxRating
-
-  performSearch()
-}
-
-function updateQualityFilter(quality, checked) {
-  if (checked) {
-    currentFilters.quality.push(quality)
-  } else {
-    currentFilters.quality = currentFilters.quality.filter((q) => q !== quality)
-  }
-  performSearch()
-}
-
-function clearFilters() {
-  currentFilters = {
-    genres: [],
-    yearRange: [1990, 2025],
-    ratingRange: [0, 10],
-    quality: [],
-  }
-
-  // Reset form elements
-  document.querySelectorAll('input[type="checkbox"]').forEach((cb) => (cb.checked = false))
-
-  const yearMin = document.getElementById("year-min")
-  const yearMax = document.getElementById("year-max")
-  const ratingMin = document.getElementById("rating-min")
-  const ratingMax = document.getElementById("rating-max")
-
-  if (yearMin) yearMin.value = 1990
-  if (yearMax) yearMax.value = 2025
-  if (ratingMin) ratingMin.value = 0
-  if (ratingMax) ratingMax.value = 10
-
-  updateYearFilter()
-  updateRatingFilter()
-  performSearch()
-}
-
-function updateURL() {
-  const url = new URL(window.location)
-  if (currentSearchQuery) {
-    url.searchParams.set("q", currentSearchQuery)
-  } else {
-    url.searchParams.delete("q")
-  }
-  window.history.replaceState({}, "", url)
-}
-
-// Utility functions
+// Navigation functions
 function goToMovie(slug) {
   window.location.href = `movie.html?slug=${slug}`
 }
 
+function goToPage(page) {
+  window.location.href = `${page}.html`
+}
+
+// Search functionality
+function initializeSearch() {
+  const searchInput = document.getElementById("search-input")
+  const searchResults = document.getElementById("search-results")
+
+  if (searchInput) {
+    searchInput.addEventListener("input", function () {
+      const query = this.value.trim()
+      if (query.length > 2) {
+        performSearch(query)
+      } else {
+        hideSearchResults()
+      }
+    })
+
+    searchInput.addEventListener("focus", function () {
+      if (this.value.trim().length > 2) {
+        showSearchResults()
+      }
+    })
+
+    // Hide search results when clicking outside
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".search-container")) {
+        hideSearchResults()
+      }
+    })
+  }
+}
+
+function performSearch(query) {
+  const results = window.movieData.searchMovies(query)
+  displaySearchResults(results.slice(0, 8))
+}
+
+function displaySearchResults(results) {
+  const searchResults = document.getElementById("search-results")
+  if (!searchResults) return
+
+  if (results.length === 0) {
+    searchResults.innerHTML = `
+      <div class="search-no-results">
+        <i class="fas fa-search"></i>
+        <p>No movies found</p>
+      </div>
+    `
+  } else {
+    searchResults.innerHTML = results
+      .map(
+        (movie) => `
+          <div class="search-result-item" onclick="goToMovie('${movie.slug}')">
+              <img src="${movie.poster}" alt="${movie.title}">
+              <div class="search-result-info">
+                  <div class="search-result-title">${movie.title}</div>
+                  <div class="search-result-meta">
+                      <span>${movie.year}</span>
+                      <span>${movie.quality}</span>
+                      <span><i class="fas fa-star"></i> ${movie.rating}</span>
+                  </div>
+              </div>
+          </div>
+      `,
+      )
+      .join("")
+  }
+
+  showSearchResults()
+}
+
+function showSearchResults() {
+  const searchResults = document.getElementById("search-results")
+  if (searchResults) {
+    searchResults.classList.add("visible")
+  }
+}
+
+function hideSearchResults() {
+  const searchResults = document.getElementById("search-results")
+  if (searchResults) {
+    searchResults.classList.remove("visible")
+  }
+}
+
+function toggleSearch() {
+  const searchContainer = document.querySelector(".search-container")
+  if (searchContainer) {
+    searchContainer.classList.toggle("active")
+    if (searchContainer.classList.contains("active")) {
+      const searchInput = document.getElementById("search-input")
+      if (searchInput) {
+        searchInput.focus()
+      }
+    }
+  }
+}
+
+// Mobile menu functionality
+function initializeMobileMenu() {
+  // Mobile menu is handled by toggleMobileMenu function
+}
+
+function toggleMobileMenu() {
+  const mobileMenu = document.getElementById("mobile-menu")
+  const menuIcon = document.getElementById("mobile-menu-icon")
+
+  if (mobileMenu && menuIcon) {
+    mobileMenu.classList.toggle("hidden")
+
+    if (mobileMenu.classList.contains("hidden")) {
+      menuIcon.className = "fas fa-bars"
+    } else {
+      menuIcon.className = "fas fa-times"
+    }
+  }
+}
+
+// Scroll effects
+function initializeScrollEffects() {
+  const header = document.getElementById("header")
+
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 100) {
+      header.classList.add("scrolled")
+    } else {
+      header.classList.remove("scrolled")
+    }
+  })
+}
+
+// Utility functions
 function formatViews(views) {
   if (views >= 1000000) {
     return (views / 1000000).toFixed(1) + "M"
@@ -359,21 +276,49 @@ function formatViews(views) {
   return views.toString()
 }
 
-function debounce(func, wait) {
-  let timeout
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout)
-      func(...args)
-    }
-    clearTimeout(timeout)
-    timeout = setTimeout(later, wait)
+function showToast(message, type = "info") {
+  const toast = document.createElement("div")
+  toast.className = `toast toast-${type}`
+  toast.textContent = message
+
+  document.body.appendChild(toast)
+
+  setTimeout(() => {
+    toast.classList.add("show")
+  }, 100)
+
+  setTimeout(() => {
+    toast.classList.remove("show")
+    setTimeout(() => {
+      if (document.body.contains(toast)) {
+        document.body.removeChild(toast)
+      }
+    }, 300)
+  }, 3000)
+}
+
+// Error handling
+window.addEventListener("error", (e) => {
+  console.error("JavaScript error:", e.error)
+})
+
+// Loading state management
+function showLoading(element) {
+  if (element) {
+    element.innerHTML = `
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading...</p>
+      </div>
+    `
   }
 }
 
-function toggleFilters() {
-  const filtersPanel = document.getElementById("filters-panel")
-  if (filtersPanel) {
-    filtersPanel.classList.toggle("hidden")
+function hideLoading(element) {
+  if (element) {
+    const spinner = element.querySelector(".loading-spinner")
+    if (spinner) {
+      spinner.remove()
+    }
   }
 }
