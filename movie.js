@@ -208,6 +208,7 @@ function loadMoviePlayer(episodeParam) {
   window.currentVideoUrl = videoUrl
 
   console.log("Player loaded with embed:", !!embedCode)
+  console.log("Current embed code:", embedCode)
 }
 
 function loadMovieInfo() {
@@ -644,41 +645,47 @@ function downloadEpisode(episodeIndex) {
 function initializeFullPagePlayer() {
   console.log("Initializing full page player...")
 
-  if (!document.getElementById("full-page-player")) {
-    const playerOverlay = document.createElement("div")
-    playerOverlay.id = "full-page-player"
-    playerOverlay.className = "full-page-player hidden"
-    playerOverlay.innerHTML = `
-            <div class="player-header">
-                <div class="player-title">
-                    <h3 id="player-movie-title">${currentMovie?.title || "Movie Player"}</h3>
-                    <span id="player-episode-info"></span>
-                </div>
-                <div class="player-controls-top">
-                    <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="player-content">
-                <div class="video-container" id="video-container">
-                    <div class="video-loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Loading video...</p>
-                    </div>
-                </div>
-            </div>
-        `
-    document.body.appendChild(playerOverlay)
+  // Remove existing player if it exists
+  const existingPlayer = document.getElementById("full-page-player")
+  if (existingPlayer) {
+    existingPlayer.remove()
   }
+
+  const playerOverlay = document.createElement("div")
+  playerOverlay.id = "full-page-player"
+  playerOverlay.className = "full-page-player hidden"
+  playerOverlay.innerHTML = `
+    <div class="player-header">
+      <div class="player-title">
+        <h3 id="player-movie-title">${currentMovie?.title || "Movie Player"}</h3>
+        <span id="player-episode-info"></span>
+      </div>
+      <div class="player-controls-top">
+        <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="player-content">
+      <div class="video-container" id="video-container">
+        <div class="video-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading video...</p>
+        </div>
+      </div>
+    </div>
+  `
+  document.body.appendChild(playerOverlay)
 }
 
 function openFullPagePlayer() {
   console.log("Opening full page player...")
+  console.log("Current embed code:", window.currentEmbedCode)
 
   if (!window.currentEmbedCode) {
     showToast("Video not available", "error")
+    console.error("No embed code available")
     return
   }
 
@@ -687,7 +694,11 @@ function openFullPagePlayer() {
   const playerTitle = document.getElementById("player-movie-title")
   const episodeInfo = document.getElementById("player-episode-info")
 
-  if (!player || !videoContainer) return
+  if (!player || !videoContainer) {
+    console.error("Player elements not found")
+    showToast("Player not initialized", "error")
+    return
+  }
 
   // Update player title
   if (currentEpisode !== null && currentMovie.multipleDownloads) {
@@ -708,15 +719,32 @@ function openFullPagePlayer() {
     </div>
   `
 
-  // Ensure iframe takes full space
+  // Ensure iframe takes full space and has proper attributes
   const iframe = videoContainer.querySelector("iframe")
   if (iframe) {
     iframe.style.width = "100%"
     iframe.style.height = "100%"
     iframe.style.border = "none"
+    iframe.style.borderRadius = "8px"
     iframe.setAttribute("allowfullscreen", "true")
     iframe.setAttribute("webkitallowfullscreen", "true")
     iframe.setAttribute("mozallowfullscreen", "true")
+    iframe.setAttribute("allow", "autoplay; fullscreen; picture-in-picture")
+
+    // Add load event listener
+    iframe.onload = () => {
+      console.log("Iframe loaded successfully")
+      showToast("Video loaded successfully", "success")
+    }
+
+    iframe.onerror = () => {
+      console.error("Iframe failed to load")
+      showToast("Failed to load video", "error")
+    }
+  } else {
+    console.error("No iframe found in embed code")
+    showToast("Invalid video format", "error")
+    return
   }
 
   // Show player
@@ -724,7 +752,7 @@ function openFullPagePlayer() {
   isFullPagePlayer = true
   document.body.style.overflow = "hidden"
 
-  showToast("Video loaded successfully", "success")
+  console.log("Full page player opened")
 }
 
 function closeFullPagePlayer() {
@@ -735,6 +763,17 @@ function closeFullPagePlayer() {
     player.classList.add("hidden")
     isFullPagePlayer = false
     document.body.style.overflow = "auto"
+
+    // Clear video content to stop playback
+    const videoContainer = document.getElementById("video-container")
+    if (videoContainer) {
+      videoContainer.innerHTML = `
+        <div class="video-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading video...</p>
+        </div>
+      `
+    }
   }
 }
 
@@ -757,3 +796,11 @@ function toggleEpisodeSidebar() {
 function toggleSearch() {
   console.log("Search toggle")
 }
+
+// Global error handler
+window.addEventListener("error", (e) => {
+  console.error("JavaScript error:", e.error)
+  if (e.error && e.error.message && e.error.message.includes("openFullPagePlayer")) {
+    showToast("Error opening video player", "error")
+  }
+})
