@@ -137,79 +137,113 @@ function initializeMoviePage() {
   console.log("Movie page initialized successfully")
 }
 
+function hasEmbeddedVideo(movie, episodeIndex = null) {
+  if (episodeIndex !== null && movie.multipleDownloads && movie.multipleDownloads[episodeIndex]) {
+    const episode = movie.multipleDownloads[episodeIndex]
+    return !!(episode.embedCode || episode.videoUrl)
+  }
+  return !!(movie.embedCode || movie.videoUrl)
+}
+
+function getVideoSource(movie, episodeIndex = null) {
+  if (episodeIndex !== null && movie.multipleDownloads && movie.multipleDownloads[episodeIndex]) {
+    const episode = movie.multipleDownloads[episodeIndex]
+    return {
+      embedCode: episode.embedCode,
+      videoUrl: episode.videoUrl,
+      title: `${movie.title} - ${episode.label}`,
+    }
+  }
+  return {
+    embedCode: movie.embedCode,
+    videoUrl: movie.videoUrl,
+    title: movie.title,
+  }
+}
+
 function loadMoviePlayer(episodeParam) {
   console.log("Loading movie player...")
 
   const mobilePlayer = document.getElementById("mobile-player")
   const desktopPlayer = document.getElementById("desktop-player")
 
-  let embedCode = currentMovie.embedCode
-  let videoUrl = currentMovie.videoUrl
-  let title = currentMovie.title
-  let hasEmbed = false
-
-  // Handle episodes for TV series
-  if (currentMovie.multipleDownloads && episodeParam) {
-    const episodeIndex = Number.parseInt(episodeParam) - 1
+  let episodeIndex = null
+  if (episodeParam && currentMovie.multipleDownloads) {
+    episodeIndex = Number.parseInt(episodeParam) - 1
     if (episodeIndex >= 0 && episodeIndex < currentMovie.multipleDownloads.length) {
-      const episode = currentMovie.multipleDownloads[episodeIndex]
-      embedCode = episode.embedCode
-      videoUrl = episode.videoUrl || videoUrl
-      title = `${currentMovie.title} - ${episode.label}`
       currentEpisode = episodeIndex
-      hasEmbed = !!(episode.embedCode || episode.videoUrl)
+    } else {
+      episodeIndex = null
     }
-  } else if (currentMovie.embedCode || currentMovie.videoUrl) {
-    hasEmbed = true
   }
+
+  const videoSource = getVideoSource(currentMovie, episodeIndex)
+  const hasVideo = hasEmbeddedVideo(currentMovie, episodeIndex)
+
+  // Store current video info globally
+  window.currentEmbedCode = videoSource.embedCode
+  window.currentVideoUrl = videoSource.videoUrl
+  window.hasEmbeddedVideo = hasVideo
 
   // Create player HTML
   let playerHTML = ""
 
-  if (hasEmbed && (embedCode || videoUrl)) {
+  if (hasVideo) {
     playerHTML = `
-            <div class="player-container relative">
-                <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="openFullPagePlayer()">
-                    <div class="play-icon bg-red-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors">
-                        <i class="fas fa-play text-2xl text-white ml-1"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-center px-4">${title}</h3>
-                    <p class="text-gray-400 text-center px-4">Click to watch in full screen</p>
-                    <div class="player-preview mt-4 bg-red-600/20 px-4 py-2 rounded-lg">
-                        <i class="fas fa-expand text-sm mr-2"></i>
-                        Full Screen Player Available
-                    </div>
-                </div>
-            </div>
-        `
+      <div class="player-container relative">
+        <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="handlePlayClick()">
+          <div class="play-icon bg-red-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors">
+            <i class="fas fa-play text-2xl text-white ml-1"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-center px-4">${videoSource.title}</h3>
+          <p class="text-gray-400 text-center px-4">Click to watch in full screen</p>
+          <div class="player-preview mt-4 bg-red-600/20 px-4 py-2 rounded-lg">
+            <i class="fas fa-expand text-sm mr-2"></i>
+            Streaming Available
+          </div>
+        </div>
+      </div>
+    `
   } else {
     // Only download available
     playerHTML = `
-            <div class="player-container relative">
-                <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="downloadMovie()">
-                    <div class="play-icon bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors">
-                        <i class="fas fa-download text-2xl text-white"></i>
-                    </div>
-                    <h3 class="text-xl font-bold mb-2 text-center px-4">${title}</h3>
-                    <p class="text-gray-400 text-center px-4">Click to download</p>
-                    <div class="player-preview mt-4 bg-gray-600/20 px-4 py-2 rounded-lg">
-                        <i class="fas fa-download text-sm mr-2"></i>
-                        Download Available
-                    </div>
-                </div>
-            </div>
-        `
+      <div class="player-container relative">
+        <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="handlePlayClick()">
+          <div class="play-icon bg-gray-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors">
+            <i class="fas fa-download text-2xl text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-2 text-center px-4">${videoSource.title}</h3>
+          <p class="text-gray-400 text-center px-4">Click to download</p>
+          <div class="player-preview mt-4 bg-gray-600/20 px-4 py-2 rounded-lg">
+            <i class="fas fa-download text-sm mr-2"></i>
+            Download Only
+          </div>
+        </div>
+      </div>
+    `
   }
 
   if (mobilePlayer) mobilePlayer.innerHTML = playerHTML
   if (desktopPlayer) desktopPlayer.innerHTML = playerHTML
 
-  // Store embed code and video URL for later use
-  window.currentEmbedCode = embedCode
-  window.currentVideoUrl = videoUrl
-  window.hasEmbeddedVideo = hasEmbed
+  console.log(
+    "Player loaded - hasVideo:",
+    hasVideo,
+    "embedCode:",
+    !!videoSource.embedCode,
+    "videoUrl:",
+    !!videoSource.videoUrl,
+  )
+}
 
-  console.log("Player loaded with embed:", !!embedCode, "videoUrl:", !!videoUrl)
+function handlePlayClick() {
+  console.log("Play clicked - hasEmbeddedVideo:", window.hasEmbeddedVideo)
+
+  if (window.hasEmbeddedVideo) {
+    openFullPagePlayer()
+  } else {
+    downloadMovie()
+  }
 }
 
 function loadMovieInfo() {
@@ -219,51 +253,45 @@ function loadMovieInfo() {
   const desktopInfo = document.getElementById("desktop-movie-info")
 
   // Check if movie has embedded video
-  const hasEmbeddedVideo = !!(
-    currentMovie.embedCode ||
-    currentMovie.videoUrl ||
-    (currentMovie.multipleDownloads && currentMovie.multipleDownloads.some((ep) => ep.embedCode || ep.videoUrl))
-  )
-
-  const watchButtonAction = hasEmbeddedVideo ? "openFullPagePlayer()" : "downloadMovie()"
-  const watchButtonText = hasEmbeddedVideo ? "Watch Now" : "Download"
-  const watchButtonIcon = hasEmbeddedVideo ? "fa-play" : "fa-download"
+  const hasVideo = hasEmbeddedVideo(currentMovie, currentEpisode)
+  const watchButtonText = hasVideo ? "Watch Now" : "Download"
+  const watchButtonIcon = hasVideo ? "fa-play" : "fa-download"
 
   const infoHTML = `
-        <div class="flex items-start space-x-4 mb-4">
-            <img src="${currentMovie.poster}" alt="${currentMovie.title}" class="w-20 h-30 object-cover rounded flex-shrink-0" onerror="this.src='/placeholder.svg?height=120&width=80'">
-            <div class="flex-1 min-w-0">
-                <h1 class="text-xl font-bold text-white mb-2 break-words">${currentMovie.title}</h1>
-                <div class="flex flex-wrap gap-2 mb-2">
-                    ${currentMovie.genre.map((g) => `<span class="bg-red-600 text-white px-2 py-1 rounded text-xs">${g}</span>`).join("")}
-                </div>
-                <div class="text-sm text-gray-400 space-y-1">
-                    <div><i class="fas fa-calendar mr-2"></i>${currentMovie.year}</div>
-                    <div><i class="fas fa-clock mr-2"></i>${currentMovie.duration}</div>
-                    <div><i class="fas fa-star mr-2 text-yellow-400"></i>${currentMovie.rating}/10</div>
-                    <div><i class="fas fa-video mr-2"></i>${currentMovie.quality}</div>
-                    <div><i class="fas fa-eye mr-2"></i>${currentMovie.views.toLocaleString()} views</div>
-                </div>
-            </div>
+    <div class="flex items-start space-x-4 mb-4">
+      <img src="${currentMovie.poster}" alt="${currentMovie.title}" class="w-20 h-30 object-cover rounded flex-shrink-0" onerror="this.src='/placeholder.svg?height=120&width=80'">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-xl font-bold text-white mb-2 break-words">${currentMovie.title}</h1>
+        <div class="flex flex-wrap gap-2 mb-2">
+          ${currentMovie.genre.map((g) => `<span class="bg-red-600 text-white px-2 py-1 rounded text-xs">${g}</span>`).join("")}
         </div>
-        <p class="text-gray-300 text-sm mb-4 line-clamp-3">${currentMovie.description}</p>
-        <div class="flex flex-wrap gap-2">
-            <button onclick="${watchButtonAction}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
-                <i class="fas ${watchButtonIcon}"></i>
-                <span>${watchButtonText}</span>
-            </button>
-            ${
-              hasEmbeddedVideo
-                ? `
-            <button onclick="downloadMovie()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
-                <i class="fas fa-download"></i>
-                <span>Download</span>
-            </button>
-            `
-                : ""
-            }
+        <div class="text-sm text-gray-400 space-y-1">
+          <div><i class="fas fa-calendar mr-2"></i>${currentMovie.year}</div>
+          <div><i class="fas fa-clock mr-2"></i>${currentMovie.duration}</div>
+          <div><i class="fas fa-star mr-2 text-yellow-400"></i>${currentMovie.rating}/10</div>
+          <div><i class="fas fa-video mr-2"></i>${currentMovie.quality}</div>
+          <div><i class="fas fa-eye mr-2"></i>${currentMovie.views.toLocaleString()} views</div>
         </div>
-    `
+      </div>
+    </div>
+    <p class="text-gray-300 text-sm mb-4 line-clamp-3">${currentMovie.description}</p>
+    <div class="flex flex-wrap gap-2">
+      <button onclick="handlePlayClick()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
+        <i class="fas ${watchButtonIcon}"></i>
+        <span>${watchButtonText}</span>
+      </button>
+      ${
+        hasVideo
+          ? `
+        <button onclick="downloadMovie()" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
+          <i class="fas fa-download"></i>
+          <span>Download</span>
+        </button>
+      `
+          : ""
+      }
+    </div>
+  `
 
   if (mobileInfo) mobileInfo.innerHTML = infoHTML
   if (desktopInfo) desktopInfo.innerHTML = infoHTML
@@ -288,17 +316,17 @@ function loadEpisodes() {
     .map(
       (episode, index) => `
         <div class="episode-item bg-gray-800 hover:bg-gray-700 p-3 rounded cursor-pointer transition-colors ${currentEpisode === index ? "bg-red-600 hover:bg-red-700" : ""}" onclick="playEpisode(${index})">
-            <div class="flex items-center justify-between">
-                <div class="flex-1 min-w-0">
-                    <h4 class="text-white font-medium truncate">${episode.label}</h4>
-                    <p class="text-gray-400 text-sm">Click to watch</p>
-                </div>
-                <div class="text-red-400 ml-2">
-                    <i class="fas fa-play"></i>
-                </div>
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <h4 class="text-white font-medium truncate">${episode.label}</h4>
+              <p class="text-gray-400 text-sm">${hasEmbeddedVideo(currentMovie, index) ? "Click to watch" : "Click to download"}</p>
             </div>
+            <div class="text-red-400 ml-2">
+              <i class="fas ${hasEmbeddedVideo(currentMovie, index) ? "fa-play" : "fa-download"}"></i>
+            </div>
+          </div>
         </div>
-    `,
+      `,
     )
     .join("")
 
@@ -322,13 +350,15 @@ function playEpisode(episodeIndex) {
   url.searchParams.set("episode", episodeIndex + 1)
   window.history.pushState({}, "", url)
 
-  // Store current embed code and video URL
-  window.currentEmbedCode = episode.embedCode
-  window.currentVideoUrl = episode.videoUrl
-  window.hasEmbeddedVideo = !!(episode.embedCode || episode.videoUrl)
+  // Update global video info
+  const videoSource = getVideoSource(currentMovie, episodeIndex)
+  window.currentEmbedCode = videoSource.embedCode
+  window.currentVideoUrl = videoSource.videoUrl
+  window.hasEmbeddedVideo = hasEmbeddedVideo(currentMovie, episodeIndex)
 
   // Update player
   loadMoviePlayer(episodeIndex + 1)
+  loadMovieInfo()
 
   // Update episode highlighting
   document.querySelectorAll(".episode-item").forEach((item, index) => {
@@ -341,7 +371,7 @@ function playEpisode(episodeIndex) {
     }
   })
 
-  showToast(`Now playing: ${episode.label}`, "success")
+  showToast(`Selected: ${episode.label}`, "success")
 }
 
 function initializeTabs() {
@@ -405,48 +435,48 @@ function loadOverviewTab() {
   const desktopOverview = document.getElementById("desktop-overview")
 
   const overviewHTML = `
-        <div class="space-y-4">
-            <div>
-                <h3 class="text-white font-semibold mb-2">Synopsis</h3>
-                <p class="text-gray-300">${currentMovie.description}</p>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold mb-2">Details</h3>
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                        <span class="text-gray-400">Director:</span>
-                        <span class="text-white ml-2">${currentMovie.director || "N/A"}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-400">Year:</span>
-                        <span class="text-white ml-2">${currentMovie.year}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-400">Duration:</span>
-                        <span class="text-white ml-2">${currentMovie.duration}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-400">Rating:</span>
-                        <span class="text-white ml-2">${currentMovie.rating}/10</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-400">Country:</span>
-                        <span class="text-white ml-2">${currentMovie.country}</span>
-                    </div>
-                    <div>
-                        <span class="text-gray-400">Language:</span>
-                        <span class="text-white ml-2">${currentMovie.language}</span>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-white font-semibold mb-2">Genres</h3>
-                <div class="flex flex-wrap gap-2">
-                    ${currentMovie.genre.map((g) => `<span class="bg-gray-700 text-white px-3 py-1 rounded-full text-sm">${g}</span>`).join("")}
-                </div>
-            </div>
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-white font-semibold mb-2">Synopsis</h3>
+        <p class="text-gray-300">${currentMovie.description}</p>
+      </div>
+      <div>
+        <h3 class="text-white font-semibold mb-2">Details</h3>
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <span class="text-gray-400">Director:</span>
+            <span class="text-white ml-2">${currentMovie.director || "N/A"}</span>
+          </div>
+          <div>
+            <span class="text-gray-400">Year:</span>
+            <span class="text-white ml-2">${currentMovie.year}</span>
+          </div>
+          <div>
+            <span class="text-gray-400">Duration:</span>
+            <span class="text-white ml-2">${currentMovie.duration}</span>
+          </div>
+          <div>
+            <span class="text-gray-400">Rating:</span>
+            <span class="text-white ml-2">${currentMovie.rating}/10</span>
+          </div>
+          <div>
+            <span class="text-gray-400">Country:</span>
+            <span class="text-white ml-2">${currentMovie.country}</span>
+          </div>
+          <div>
+            <span class="text-gray-400">Language:</span>
+            <span class="text-white ml-2">${currentMovie.language}</span>
+          </div>
         </div>
-    `
+      </div>
+      <div>
+        <h3 class="text-white font-semibold mb-2">Genres</h3>
+        <div class="flex flex-wrap gap-2">
+          ${currentMovie.genre.map((g) => `<span class="bg-gray-700 text-white px-3 py-1 rounded-full text-sm">${g}</span>`).join("")}
+        </div>
+      </div>
+    </div>
+  `
 
   if (mobileOverview) mobileOverview.innerHTML = overviewHTML
   if (desktopOverview) desktopOverview.innerHTML = overviewHTML
@@ -464,45 +494,45 @@ function loadDownloadsTab() {
   if (currentMovie.multipleDownloads && currentMovie.multipleDownloads.length > 0) {
     // TV Series with episodes
     downloadsHTML = `
-            <div class="space-y-3">
-                <h4 class="text-white font-semibold mb-3">Episode Downloads</h4>
-                ${currentMovie.multipleDownloads
-                  .map(
-                    (episode, index) => `
-                    <div class="bg-gray-800 p-4 rounded-lg">
-                        <div class="flex items-center justify-between">
-                            <div class="flex-1 min-w-0">
-                                <h4 class="text-white font-medium truncate">${episode.label}</h4>
-                                <p class="text-gray-400 text-sm">Click to download episode</p>
-                            </div>
-                            <div class="flex space-x-2 ml-4">
-                                <button onclick="downloadEpisode(${index})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
-                                    <i class="fas fa-download mr-1"></i>
-                                    Download
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `,
-                  )
-                  .join("")}
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold mb-3">Episode Downloads</h4>
+        ${currentMovie.multipleDownloads
+          .map(
+            (episode, index) => `
+            <div class="bg-gray-800 p-4 rounded-lg">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <h4 class="text-white font-medium truncate">${episode.label}</h4>
+                  <p class="text-gray-400 text-sm">Click to download episode</p>
+                </div>
+                <div class="flex space-x-2 ml-4">
+                  <button onclick="downloadEpisode(${index})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
+                    <i class="fas fa-download mr-1"></i>
+                    Download
+                  </button>
+                </div>
+              </div>
             </div>
-        `
+          `,
+          )
+          .join("")}
+      </div>
+    `
   } else {
     // Single movie
     downloadsHTML = `
-            <div class="space-y-4">
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <h4 class="text-white font-medium mb-3">${currentMovie.title}</h4>
-                    <div class="grid grid-cols-1 gap-3">
-                        <button onclick="downloadMovie()" class="bg-red-600 hover:bg-red-700 text-white p-3 rounded text-center transition-colors">
-                            <div class="font-bold">Download ${currentMovie.quality}</div>
-                            <div class="text-sm opacity-75">Click to download</div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `
+      <div class="space-y-4">
+        <div class="bg-gray-800 p-4 rounded-lg">
+          <h4 class="text-white font-medium mb-3">${currentMovie.title}</h4>
+          <div class="grid grid-cols-1 gap-3">
+            <button onclick="downloadMovie()" class="bg-red-600 hover:bg-red-700 text-white p-3 rounded text-center transition-colors">
+              <div class="font-bold">Download ${currentMovie.quality}</div>
+              <div class="text-sm opacity-75">Click to download</div>
+            </button>
+          </div>
+        </div>
+      </div>
+    `
   }
 
   if (mobileDownloads) mobileDownloads.innerHTML = downloadsHTML
@@ -511,22 +541,22 @@ function loadDownloadsTab() {
   // Quick download for desktop sidebar
   if (desktopQuickDownload) {
     desktopQuickDownload.innerHTML = `
-            <div class="space-y-2">
-                <button onclick="downloadMovie()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded text-sm transition-colors">
-                    <i class="fas fa-download mr-2"></i>
-                    Download ${currentMovie.quality}
-                </button>
-                ${
-                  currentMovie.multipleDownloads
-                    ? `
-                    <p class="text-gray-400 text-xs text-center">
-                        ${currentMovie.multipleDownloads.length} episodes available
-                    </p>
-                `
-                    : ""
-                }
-            </div>
+      <div class="space-y-2">
+        <button onclick="downloadMovie()" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded text-sm transition-colors">
+          <i class="fas fa-download mr-2"></i>
+          Download ${currentMovie.quality}
+        </button>
+        ${
+          currentMovie.multipleDownloads
+            ? `
+          <p class="text-gray-400 text-xs text-center">
+            ${currentMovie.multipleDownloads.length} episodes available
+          </p>
         `
+            : ""
+        }
+      </div>
+    `
   }
 }
 
@@ -538,45 +568,39 @@ function loadCastTab() {
   if (!desktopCast) return
 
   const castHTML = `
-        <div class="space-y-4">
-            ${
-              currentMovie.cast && currentMovie.cast.length > 0
-                ? `
-            <div>
-                <h3 class="text-white font-semibold mb-3">Cast</h3>
-                <div class="grid grid-cols-2 gap-3">
-                    ${currentMovie.cast
-                      .map(
-                        (actor) => `
-                        <div class="text-gray-300">${actor}</div>
-                    `,
-                      )
-                      .join("")}
-                </div>
-            </div>
-            `
-                : ""
-            }
-            ${
-              currentMovie.director
-                ? `
-            <div>
-                <h3 class="text-white font-semibold mb-3">Director</h3>
-                <div class="text-gray-300">${currentMovie.director}</div>
-            </div>
-            `
-                : ""
-            }
-            <div>
-                <h3 class="text-white font-semibold mb-3">Additional Info</h3>
-                <div class="space-y-2 text-sm">
-                    <div><span class="text-gray-400">Country:</span> <span class="text-white">${currentMovie.country}</span></div>
-                    <div><span class="text-gray-400">Language:</span> <span class="text-white">${currentMovie.language}</span></div>
-                    <div><span class="text-gray-400">Views:</span> <span class="text-white">${currentMovie.views.toLocaleString()}</span></div>
-                </div>
-            </div>
+    <div class="space-y-4">
+      ${
+        currentMovie.cast && currentMovie.cast.length > 0
+          ? `
+        <div>
+          <h3 class="text-white font-semibold mb-3">Cast</h3>
+          <div class="grid grid-cols-2 gap-3">
+            ${currentMovie.cast.map((actor) => `<div class="text-gray-300">${actor}</div>`).join("")}
+          </div>
         </div>
-    `
+      `
+          : ""
+      }
+      ${
+        currentMovie.director
+          ? `
+        <div>
+          <h3 class="text-white font-semibold mb-3">Director</h3>
+          <div class="text-gray-300">${currentMovie.director}</div>
+        </div>
+      `
+          : ""
+      }
+      <div>
+        <h3 class="text-white font-semibold mb-3">Additional Info</h3>
+        <div class="space-y-2 text-sm">
+          <div><span class="text-gray-400">Country:</span> <span class="text-white">${currentMovie.country}</span></div>
+          <div><span class="text-gray-400">Language:</span> <span class="text-white">${currentMovie.language}</span></div>
+          <div><span class="text-gray-400">Views:</span> <span class="text-white">${currentMovie.views.toLocaleString()}</span></div>
+        </div>
+      </div>
+    </div>
+  `
 
   desktopCast.innerHTML = castHTML
 }
@@ -598,28 +622,28 @@ function loadRelatedMovies() {
     .map(
       (movie) => `
         <div class="movie-card cursor-pointer" onclick="goToMovie('${movie.slug}')">
-            <div class="relative">
-                <img src="${movie.poster}" alt="${movie.title}" loading="lazy" class="w-full h-auto" onerror="this.src='/placeholder.svg?height=450&width=300'">
-                <div class="quality-badge">${movie.quality}</div>
-                <div class="rating-badge">
-                    <i class="fas fa-star text-yellow-400"></i>
-                    ${movie.rating}
-                </div>
-                <div class="overlay">
-                    <div class="play-button">
-                        <i class="fas fa-play"></i>
-                    </div>
-                </div>
+          <div class="relative">
+            <img src="${movie.poster}" alt="${movie.title}" loading="lazy" class="w-full h-auto" onerror="this.src='/placeholder.svg?height=450&width=300'">
+            <div class="quality-badge">${movie.quality}</div>
+            <div class="rating-badge">
+              <i class="fas fa-star text-yellow-400"></i>
+              ${movie.rating}
             </div>
-            <div class="movie-info">
-                <div class="movie-title">${movie.title}</div>
-                <div class="movie-meta">
-                    <span>${movie.year}</span>
-                    <span>${movie.duration}</span>
-                </div>
+            <div class="overlay">
+              <div class="play-button">
+                <i class="fas fa-play"></i>
+              </div>
             </div>
+          </div>
+          <div class="movie-info">
+            <div class="movie-title">${movie.title}</div>
+            <div class="movie-meta">
+              <span>${movie.year}</span>
+              <span>${movie.duration}</span>
+            </div>
+          </div>
         </div>
-    `,
+      `,
     )
     .join("")
 
@@ -647,8 +671,8 @@ function downloadMovie() {
 
 function downloadEpisode(episodeIndex) {
   const episode = currentMovie.multipleDownloads[episodeIndex]
-  if (episode.url) {
-    window.open(episode.url, "_blank")
+  if (episode.url || episode.downloadUrl) {
+    window.open(episode.url || episode.downloadUrl, "_blank")
     showToast(`Starting download: ${episode.label}`, "success")
   } else {
     showToast("Download not available for this episode", "error")
@@ -664,74 +688,44 @@ function initializeFullPagePlayer() {
     playerOverlay.id = "full-page-player"
     playerOverlay.className = "full-page-player hidden"
     playerOverlay.innerHTML = `
-            <div class="player-header">
-                <div class="player-title">
-                    <h3 id="player-movie-title">${currentMovie?.title || "Movie Player"}</h3>
-                    <span id="player-episode-info"></span>
-                </div>
-                <div class="player-controls-top">
-                    <button onclick="minimizePlayer()" class="control-btn minimize-btn" title="Minimize">
-                        <i class="fas fa-window-minimize"></i>
-                    </button>
-                    <button onclick="openInNewTab()" class="control-btn new-tab-btn" title="Open in New Tab">
-                        <i class="fas fa-external-link-alt"></i>
-                    </button>
-                    <button onclick="toggleFullscreen()" class="control-btn fullscreen-btn" title="Toggle Fullscreen">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="player-content">
-                <div class="video-container" id="video-container">
-                    <div class="video-loading">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <p>Loading video...</p>
-                    </div>
-                </div>
-                <div class="player-controls-bottom" id="player-controls">
-                    <div class="control-group">
-                        <button onclick="togglePlayPause()" class="control-btn play-pause-btn" title="Play/Pause">
-                            <i class="fas fa-play" id="play-pause-icon"></i>
-                        </button>
-                        <div class="volume-control">
-                            <button onclick="toggleMute()" class="control-btn volume-btn" title="Mute/Unmute">
-                                <i class="fas fa-volume-up" id="volume-icon"></i>
-                            </button>
-                            <input type="range" class="volume-slider" min="0" max="100" value="100" onchange="setVolume(this.value)">
-                        </div>
-                    </div>
-                    <div class="progress-container">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progress-fill"></div>
-                        </div>
-                        <div class="time-display">
-                            <span id="current-time">00:00</span> / <span id="total-time">00:00</span>
-                        </div>
-                    </div>
-                    <div class="control-group">
-                        <button onclick="changePlaybackSpeed()" class="control-btn speed-btn" title="Playback Speed">
-                            <span id="speed-text">1x</span>
-                        </button>
-                        <button onclick="togglePictureInPicture()" class="control-btn pip-btn" title="Picture in Picture">
-                            <i class="fas fa-clone"></i>
-                        </button>
-                        <button onclick="toggleFullscreen()" class="control-btn fullscreen-btn" title="Fullscreen">
-                            <i class="fas fa-expand" id="fullscreen-icon"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        `
+      <div class="player-header">
+        <div class="player-title">
+          <h3 id="player-movie-title">Movie Player</h3>
+          <span id="player-episode-info"></span>
+        </div>
+        <div class="player-controls-top">
+          <button onclick="minimizePlayer()" class="control-btn minimize-btn" title="Minimize">
+            <i class="fas fa-window-minimize"></i>
+          </button>
+          <button onclick="openInNewTab()" class="control-btn new-tab-btn" title="Open in New Tab">
+            <i class="fas fa-external-link-alt"></i>
+          </button>
+          <button onclick="toggleFullscreen()" class="control-btn fullscreen-btn" title="Toggle Fullscreen">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="player-content">
+        <div class="video-container" id="video-container">
+          <div class="video-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading video...</p>
+          </div>
+        </div>
+      </div>
+    `
     document.body.appendChild(playerOverlay)
   }
 }
 
 function openFullPagePlayer() {
   console.log("Opening full page player...")
+  console.log("Current embed code:", window.currentEmbedCode)
+  console.log("Current video URL:", window.currentVideoUrl)
 
   // Check if we have embedded video available
   if (!window.currentEmbedCode && !window.currentVideoUrl) {
@@ -745,7 +739,10 @@ function openFullPagePlayer() {
   const playerTitle = document.getElementById("player-movie-title")
   const episodeInfo = document.getElementById("player-episode-info")
 
-  if (!player || !videoContainer) return
+  if (!player || !videoContainer) {
+    console.error("Player elements not found")
+    return
+  }
 
   // Update player title
   if (currentEpisode !== null && currentMovie.multipleDownloads) {
@@ -760,17 +757,23 @@ function openFullPagePlayer() {
   // Load video - prioritize embedCode over videoUrl
   let videoContent = ""
   if (window.currentEmbedCode) {
+    console.log("Loading with embed code")
     videoContent = `
-        <div class="embedded-video">
-            ${window.currentEmbedCode}
-        </div>
+      <div class="embedded-video">
+        ${window.currentEmbedCode}
+      </div>
     `
   } else if (window.currentVideoUrl) {
+    console.log("Loading with video URL")
     videoContent = `
-        <div class="embedded-video">
-            <iframe src="${window.currentVideoUrl}" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>
-        </div>
+      <div class="embedded-video">
+        <iframe src="${window.currentVideoUrl}" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>
+      </div>
     `
+  } else {
+    console.error("No video source available")
+    showToast("No video source available", "error")
+    return
   }
 
   videoContainer.innerHTML = videoContent
@@ -780,10 +783,7 @@ function openFullPagePlayer() {
   isFullPagePlayer = true
   document.body.style.overflow = "hidden"
 
-  // Initialize player controls
-  initializePlayerControls()
-
-  showToast("Video loaded successfully", "success")
+  showToast("Video player opened", "success")
 }
 
 function closeFullPagePlayer() {
@@ -805,15 +805,15 @@ function closeFullPagePlayer() {
 function minimizePlayer() {
   const player = document.getElementById("full-page-player")
   if (player) {
-    player.classList.add("minimized")
-    showToast("Player minimized", "info")
+    player.classList.toggle("minimized")
+    showToast(player.classList.contains("minimized") ? "Player minimized" : "Player restored", "info")
   }
 }
 
 function openInNewTab() {
   let videoUrl = window.currentVideoUrl
 
-  if (window.currentEmbedCode) {
+  if (window.currentEmbedCode && !videoUrl) {
     // Extract URL from iframe if possible
     const iframeMatch = window.currentEmbedCode.match(/src="([^"]+)"/)
     if (iframeMatch) {
@@ -831,129 +831,29 @@ function openInNewTab() {
 
 function toggleFullscreen() {
   const player = document.getElementById("full-page-player")
-  const fullscreenIcon = document.getElementById("fullscreen-icon")
+  const fullscreenIcon = document.querySelector(".fullscreen-btn i")
 
   if (!document.fullscreenElement) {
     player
       .requestFullscreen()
       .then(() => {
-        fullscreenIcon.classList.remove("fa-expand")
-        fullscreenIcon.classList.add("fa-compress")
+        if (fullscreenIcon) {
+          fullscreenIcon.classList.remove("fa-expand")
+          fullscreenIcon.classList.add("fa-compress")
+        }
       })
       .catch((err) => {
         console.error("Error attempting to enable fullscreen:", err)
+        showToast("Fullscreen not supported", "error")
       })
   } else {
     document.exitFullscreen().then(() => {
-      fullscreenIcon.classList.remove("fa-compress")
-      fullscreenIcon.classList.add("fa-expand")
+      if (fullscreenIcon) {
+        fullscreenIcon.classList.remove("fa-compress")
+        fullscreenIcon.classList.add("fa-expand")
+      }
     })
   }
-}
-
-function togglePlayPause() {
-  const iframe = document.querySelector("#video-container iframe")
-  const playPauseIcon = document.getElementById("play-pause-icon")
-
-  if (iframe) {
-    // Try to communicate with iframe for play/pause
-    try {
-      iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*")
-
-      if (playPauseIcon.classList.contains("fa-play")) {
-        playPauseIcon.classList.remove("fa-play")
-        playPauseIcon.classList.add("fa-pause")
-        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*")
-      } else {
-        playPauseIcon.classList.remove("fa-pause")
-        playPauseIcon.classList.add("fa-play")
-        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*")
-      }
-    } catch (e) {
-      showToast("Play/Pause control not available for this video", "warning")
-    }
-  }
-}
-
-function toggleMute() {
-  const volumeIcon = document.getElementById("volume-icon")
-  const volumeSlider = document.querySelector(".volume-slider")
-
-  if (volumeIcon.classList.contains("fa-volume-up") || volumeIcon.classList.contains("fa-volume-down")) {
-    volumeIcon.className = "fas fa-volume-mute"
-    volumeSlider.value = 0
-  } else {
-    volumeIcon.className = "fas fa-volume-up"
-    volumeSlider.value = 100
-  }
-}
-
-function setVolume(value) {
-  const volumeIcon = document.getElementById("volume-icon")
-
-  if (value == 0) {
-    volumeIcon.className = "fas fa-volume-mute"
-  } else if (value < 50) {
-    volumeIcon.className = "fas fa-volume-down"
-  } else {
-    volumeIcon.className = "fas fa-volume-up"
-  }
-}
-
-let currentSpeed = 1
-const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2]
-
-function changePlaybackSpeed() {
-  const speedText = document.getElementById("speed-text")
-  const currentIndex = speeds.indexOf(currentSpeed)
-  const nextIndex = (currentIndex + 1) % speeds.length
-  currentSpeed = speeds[nextIndex]
-  speedText.textContent = `${currentSpeed}x`
-
-  showToast(`Playback speed: ${currentSpeed}x`, "info")
-}
-
-function togglePictureInPicture() {
-  const video = document.querySelector("#video-container video")
-
-  if (video && document.pictureInPictureEnabled) {
-    if (document.pictureInPictureElement) {
-      document.exitPictureInPicture()
-    } else {
-      video.requestPictureInPicture().catch((err) => {
-        showToast("Picture-in-Picture not supported", "warning")
-      })
-    }
-  } else {
-    showToast("Picture-in-Picture not available for this video", "warning")
-  }
-}
-
-function initializePlayerControls() {
-  // Initialize any additional player control functionality
-  const player = document.getElementById("full-page-player")
-
-  // Auto-hide controls
-  let controlsTimeout
-  const controls = document.getElementById("player-controls")
-
-  function showControls() {
-    controls.classList.remove("hidden")
-    clearTimeout(controlsTimeout)
-    controlsTimeout = setTimeout(() => {
-      controls.classList.add("hidden")
-    }, 3000)
-  }
-
-  function hideControls() {
-    controls.classList.add("hidden")
-  }
-
-  player.addEventListener("mousemove", showControls)
-  player.addEventListener("mouseleave", hideControls)
-
-  // Show controls initially
-  showControls()
 }
 
 // Keyboard shortcuts
@@ -964,22 +864,15 @@ document.addEventListener("keydown", (e) => {
     case "Escape":
       closeFullPagePlayer()
       break
-    case " ":
-    case "k":
-      e.preventDefault()
-      togglePlayPause()
-      break
     case "f":
+    case "F":
       e.preventDefault()
       toggleFullscreen()
       break
     case "m":
+    case "M":
       e.preventDefault()
-      toggleMute()
-      break
-    case "p":
-      e.preventDefault()
-      togglePictureInPicture()
+      minimizePlayer()
       break
   }
 })
