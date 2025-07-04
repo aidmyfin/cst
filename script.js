@@ -130,7 +130,12 @@ function renderMovieGrid(container, movies) {
 
 // Navigation functions
 function goToMovie(slug) {
-  window.location.href = `movie.html?slug=${slug}`
+  console.log("Navigating to movie:", slug)
+  // Ensure the slug is properly encoded
+  const encodedSlug = encodeURIComponent(slug)
+  const movieUrl = `movie.html?slug=${encodedSlug}`
+  console.log("Movie URL:", movieUrl)
+  window.location.href = movieUrl
 }
 
 function goToPage(page) {
