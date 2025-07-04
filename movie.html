@@ -1,74 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Movie Details</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie - CINESTREAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-black text-white">
+    <!-- Header -->
+    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-arrow-left text-xl"></i>
+                    </button>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
+                    </a>
+                </div>
 
-  <!-- Header -->
-  <header class="bg-gray-900 py-4">
-    <div class="container mx-auto flex justify-between items-center">
-      <a href="index.html" class="text-2xl font-bold">MovieDB</a>
-      <nav>
-        <a href="index.html" class="mr-4 hover:text-gray-300">Home</a>
-        <a href="search.html" class="mr-4 hover:text-gray-300">Search</a>
-      </nav>
-    </div>
-  </header>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors">Home</a>
+                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
+                    <a href="downloads.html" class="text-white hover:text-gray-300 font-medium transition-colors flex items-center space-x-1">
+                        <i class="fas fa-download"></i>
+                        <span>Downloads</span>
+                    </a>
+                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors">Categories</a>
+                    <a href="all-movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">All Movies A-Z</a>
+                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors">Search</a>
+                </nav>
 
-  <!-- Main Content -->
-  <main class="container mx-auto mt-8">
-    <!-- Movie Details -->
-    <div id="movie-details" class="flex flex-col md:flex-row items-start">
-      <img id="movie-poster" src="/placeholder.svg" alt="Movie Poster" class="w-full md:w-1/3 mb-4 md:mb-0 md:mr-8 rounded shadow-md">
-      <div class="w-full md:w-2/3">
-        <h2 id="movie-title" class="text-3xl font-bold mb-2"></h2>
-        <p id="movie-overview" class="text-gray-400 mb-4"></p>
-        <p><span class="font-bold">Release Date:</span> <span id="movie-release-date"></span></p>
-        <p><span class="font-bold">Rating:</span> <span id="movie-rating"></span></p>
-        <p><span class="font-bold">Genres:</span> <span id="movie-genres"></span></p>
-      </div>
-    </div>
-  </main>
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars" id="mobile-menu-icon"></i>
+                    </button>
+                </div>
+            </div>
 
-  <!-- Error State -->
-  <div id="error-state" class="hidden min-h-screen bg-gray-900 flex items-center justify-center">
-  <div class="text-center py-12 px-4">
-    <i class="fas fa-exclamation-triangle text-6xl text-red-500 mb-4"></i>
-    <h2 class="text-2xl font-bold text-white mb-2">Movie Not Found</h2>
-    <p class="text-gray-400 mb-4">The movie you're looking for could not be found.</p>
-    <div class="space-x-4">
-      <button onclick="goBack()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors">
-        <i class="fas fa-arrow-left mr-2"></i>Go Back
-      </button>
-      <button onclick="window.location.href='index.html'" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition-colors">
-        <i class="fas fa-home mr-2"></i>Home
-      </button>
-      <button onclick="window.location.href='search.html'" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition-colors">
-        <i class="fas fa-search mr-2"></i>Search
-      </button>
-    </div>
-    <div class="mt-6 text-sm text-gray-500">
-      <p>Debug Info:</p>
-      <p id="debug-info">Loading...</p>
-    </div>
-  </div>
-</div>
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="md:hidden border-t border-gray-800 bg-black/95 backdrop-blur-xl hidden">
+                <nav class="py-4 space-y-2">
+                    <a href="index.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Home</a>
+                    <a href="movies.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Movies</a>
+                    <a href="downloads.html" class="flex items-center px-4 py-2 text-white hover:bg-gray-800 transition-colors">
+                        <i class="fas fa-download mr-2"></i>
+                        Downloads Center
+                    </a>
+                    <a href="categories.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">Categories</a>
+                    <a href="all-movies.html" class="block px-4 py-2 text-white hover:bg-gray-800 transition-colors">All Movies A-Z</a>
+                </nav>
+            </div>
+        </div>
+    </header>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 py-4 mt-8">
-    <div class="container mx-auto text-center">
-      <p class="text-gray-400">© 2024 MovieDB</p>
-    </div>
-  </footer>
+    <main class="pt-16">
+        <div class="container mx-auto px-4 py-8">
+            <!-- Loading State -->
+            <div id="loading-state" class="text-center py-20">
+                <i class="fas fa-spinner fa-spin text-4xl text-red-500 mb-4"></i>
+                <p class="text-gray-400">Loading movie...</p>
+            </div>
 
-  <!-- Scripts -->
-  <script src="data.js"></script>
-  <script src="movie.js"></script>
+            <!-- Error State -->
+            <div id="error-state" class="text-center py-20 hidden">
+                <i class="fas fa-exclamation-triangle text-4xl text-red-500 mb-4"></i>
+                <h2 class="text-2xl font-bold text-white mb-4">Movie Not Found</h2>
+                <p class="text-gray-400 mb-6">The movie you're looking for doesn't exist or has been removed.</p>
+                <a href="index.html" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg">
+                    <i class="fas fa-home mr-2"></i>
+                    Go Home
+                </a>
+            </div>
+
+            <!-- Movie Content -->
+            <div id="movie-content" class="hidden">
+                <!-- Mobile Layout -->
+                <div class="lg:hidden space-y-6">
+                    <!-- Mobile Player -->
+                    <div id="mobile-player" class="aspect-video rounded-lg overflow-hidden bg-gray-900">
+                        <!-- Player content will be loaded here -->
+                    </div>
+
+                    <!-- Mobile Movie Info -->
+                    <div id="mobile-movie-info" class="bg-gray-900 rounded-lg p-4">
+                        <!-- Movie info will be loaded here -->
+                    </div>
+
+                    <!-- Mobile Episodes -->
+                    <div id="mobile-episodes" class="bg-gray-900 rounded-lg p-4 hidden">
+                        <h3 class="text-white text-lg font-semibold mb-4">Episodes</h3>
+                        <div id="mobile-episodes-list" class="space-y-2">
+                            <!-- Episodes will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Mobile Tabs -->
+                    <div class="bg-gray-900 rounded-lg overflow-hidden">
+                        <div class="flex border-b border-gray-700">
+                            <button class="tab-button flex-1 py-3 px-4 text-center bg-red-600 text-white" data-tab="overview">
+                                Overview
+                            </button>
+                            <button class="tab-button flex-1 py-3 px-4 text-center text-gray-400" data-tab="downloads">
+                                Downloads
+                            </button>
+                            <button class="tab-button flex-1 py-3 px-4 text-center text-gray-400" data-tab="comments">
+                                Comments
+                            </button>
+                        </div>
+
+                        <div class="p-4">
+                            <div id="overview-tab" class="tab-content">
+                                <div id="mobile-overview">
+                                    <!-- Overview content will be loaded here -->
+                                </div>
+                            </div>
+
+                            <div id="downloads-tab" class="tab-content hidden">
+                                <div id="mobile-downloads">
+                                    <!-- Downloads content will be loaded here -->
+                                </div>
+                            </div>
+
+                            <div id="comments-tab" class="tab-content hidden">
+                                <div class="text-center py-8">
+                                    <i class="fas fa-comments text-4xl text-gray-600 mb-4"></i>
+                                    <p class="text-gray-400">Comments coming soon</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Desktop Layout -->
+                <div class="hidden lg:block">
+                    <div class="grid grid-cols-3 gap-8">
+                        <div class="col-span-2 space-y-6">
+                            <!-- Desktop Player -->
+                            <div id="desktop-player" class="aspect-video rounded-lg overflow-hidden bg-gray-900">
+                                <!-- Player content will be loaded here -->
+                            </div>
+
+                            <!-- Desktop Episodes -->
+                            <div id="desktop-episodes" class="bg-gray-900 rounded-lg p-6 hidden">
+                                <h3 class="text-white text-xl font-semibold mb-4">Episodes</h3>
+                                <div id="desktop-episodes-list" class="space-y-3">
+                                    <!-- Episodes will be loaded here -->
+                                </div>
+                            </div>
+
+                            <!-- Desktop Tabs -->
+                            <div class="bg-gray-900 rounded-lg overflow-hidden">
+                                <div class="flex border-b border-gray-700">
+                                    <button class="desktop-tab-button py-3 px-6 bg-red-600 text-white" data-tab="overview">
+                                        Overview
+                                    </button>
+                                    <button class="desktop-tab-button py-3 px-6 text-gray-400" data-tab="downloads">
+                                        Downloads
+                                    </button>
+                                    <button class="desktop-tab-button py-3 px-6 text-gray-400" data-tab="cast">
+                                        Cast & Crew
+                                    </button>
+                                    <button class="desktop-tab-button py-3 px-6 text-gray-400" data-tab="comments">
+                                        Comments
+                                    </button>
+                                </div>
+
+                                <div class="p-6">
+                                    <div id="desktop-overview-tab" class="desktop-tab-content">
+                                        <div id="desktop-overview">
+                                            <!-- Overview content will be loaded here -->
+                                        </div>
+                                    </div>
+
+                                    <div id="desktop-downloads-tab" class="desktop-tab-content hidden">
+                                        <div id="desktop-downloads">
+                                            <!-- Downloads content will be loaded here -->
+                                        </div>
+                                    </div>
+
+                                    <div id="desktop-cast-tab" class="desktop-tab-content hidden">
+                                        <div id="desktop-cast">
+                                            <!-- Cast content will be loaded here -->
+                                        </div>
+                                    </div>
+
+                                    <div id="desktop-comments-tab" class="desktop-tab-content hidden">
+                                        <div class="text-center py-8">
+                                            <i class="fas fa-comments text-4xl text-gray-600 mb-4"></i>
+                                            <p class="text-gray-400">Comments coming soon</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-6">
+                            <!-- Desktop Movie Info -->
+                            <div id="desktop-movie-info" class="bg-gray-900 rounded-lg p-6">
+                                <!-- Movie info will be loaded here -->
+                            </div>
+
+                            <!-- Quick Download Section -->
+                            <div class="bg-gray-900 rounded-lg p-6">
+                                <h3 class="text-white text-lg font-semibold mb-4">Quick Download</h3>
+                                <div id="desktop-quick-download">
+                                    <!-- Quick download content will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Related Movies -->
+                <div class="mt-12 pb-20 md:pb-8">
+                    <h2 class="text-2xl md:text-3xl font-bold mb-6 px-4 md:px-0 flex items-center">
+                        <i class="fas fa-film text-red-500 mr-3"></i>
+                        Related Movies
+                    </h2>
+                    <div id="related-movies" class="movie-grid">
+                        <!-- Related movies will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Mobile Navigation -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs font-medium">Search</span>
+            </a>
+            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-download mb-1"></i>
+                <span class="text-xs font-medium">Downloads</span>
+            </a>
+            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-th-large mb-1"></i>
+                <span class="text-xs font-medium">Categories</span>
+            </a>
+            <button onclick="toggleEpisodeSidebar()" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-red-500 bg-red-500/10" id="episodes-btn" style="display: none;">
+                <i class="fas fa-list mb-1"></i>
+                <span class="text-xs font-medium">Episodes</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Full Page Video Player Overlay -->
+    <div id="full-page-player" class="full-page-player hidden">
+        <!-- Player content will be dynamically created by JavaScript -->
+    </div>
+
+    <script src="data.js"></script>
+    <script src="movie.js"></script>
 </body>
 </html>
