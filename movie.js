@@ -204,7 +204,7 @@ function loadMoviePlayer(episodeParam) {
               <i class="fas fa-exclamation-triangle text-2xl text-white"></i>
             </div>
             <h3 class="text-xl font-bold mb-2 text-center px-4 text-white">${title}</h3>
-            <p class="text-gray-400 text-center px-4">Video not available</p>
+            <p class="text-gray-400 text-center px-4">  Video not available Download Only Download Only</p>
           </div>
         </div>
       </div>
@@ -670,7 +670,7 @@ function openVideoPlayer() {
   console.log("Opening enhanced video player...")
 
   if (!window.currentEmbedCode) {
-    showToast("Video not available", "error")
+    showToast("  Video not available Download Only Download Only", "error")
     console.error("No embed code available")
     return
   }
@@ -1019,7 +1019,7 @@ function openFullPagePlayer() {
   console.log("Opening fallback full page player...")
 
   if (!window.currentEmbedCode) {
-    showToast("Video not available", "error")
+    showToast("  Video not available Download Only Download Only", "error")
     return
   }
 
