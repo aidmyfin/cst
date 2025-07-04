@@ -22,9 +22,6 @@ const moviesData = [
     isFeatured: true,
     isNew: true,
     isTrending: true,
-    embedCode:
-      '<iframe src="https://strtape.tech/e/9729b9572899b0fe/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://strtape.tech/e/9729b9572899b0fe/",
   },
   {
     id: "2",
