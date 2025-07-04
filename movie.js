@@ -170,15 +170,15 @@ function loadMoviePlayer(episodeParam) {
     playerHTML = `
       <div class="player-container relative bg-black rounded-lg overflow-hidden">
         <div class="aspect-video">
-          <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="openFullPagePlayer()">
+          <div class="player-placeholder bg-gray-800 flex flex-col items-center justify-center h-full cursor-pointer hover:bg-gray-700 transition-colors" onclick="openVideoPlayer()">
             <div class="play-icon bg-red-600 rounded-full w-16 h-16 flex items-center justify-center mb-4 hover:bg-red-700 transition-colors shadow-lg">
               <i class="fas fa-play text-2xl text-white ml-1"></i>
             </div>
             <h3 class="text-xl font-bold mb-2 text-center px-4 text-white">${title}</h3>
-            <p class="text-gray-400 text-center px-4 mb-4">Click to watch in full screen</p>
+            <p class="text-gray-400 text-center px-4 mb-4">Click to watch video</p>
             <div class="player-preview bg-red-600/20 px-4 py-2 rounded-lg border border-red-600/30">
-              <i class="fas fa-expand text-sm mr-2 text-red-400"></i>
-              <span class="text-red-400 font-medium">Full Screen Player Available</span>
+              <i class="fas fa-play text-sm mr-2 text-red-400"></i>
+              <span class="text-red-400 font-medium">Video Player Ready</span>
             </div>
           </div>
         </div>
@@ -208,7 +208,6 @@ function loadMoviePlayer(episodeParam) {
   window.currentVideoUrl = videoUrl
 
   console.log("Player loaded with embed:", !!embedCode)
-  console.log("Current embed code:", embedCode)
 }
 
 function loadMovieInfo() {
@@ -236,7 +235,7 @@ function loadMovieInfo() {
         </div>
         <p class="text-gray-300 text-sm mb-4 line-clamp-3">${currentMovie.description}</p>
         <div class="flex flex-wrap gap-2">
-            <button onclick="openFullPagePlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
+            <button onclick="openVideoPlayer()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded flex items-center space-x-2 transition-colors">
                 <i class="fas fa-play"></i>
                 <span>Watch Now</span>
             </button>
@@ -407,8 +406,7 @@ function loadOverviewTab() {
                     </div>
                     <div>
                         <span class="text-gray-400">Rating:</span>
-                        <span class="text-white ml-2">${currentMovie.rating}/10</span>
-                    </div>
+                        <span class="text-white ml-2">${currentMovie.rating}/10</div>
                     <div>
                         <span class="text-gray-400">Country:</span>
                         <span class="text-white ml-2">${currentMovie.country}</span>
@@ -641,308 +639,203 @@ function downloadEpisode(episodeIndex) {
   }
 }
 
-// Full Page Player Functions
+// Video Player Functions
 function initializeFullPagePlayer() {
-  console.log("Initializing full page player...")
+  console.log("Initializing video player...")
 
   // Remove existing player if it exists
-  const existingPlayer = document.getElementById("full-page-player")
+  const existingPlayer = document.getElementById("video-player-popup")
   if (existingPlayer) {
     existingPlayer.remove()
   }
 
-  const playerOverlay = document.createElement("div")
-  playerOverlay.id = "full-page-player"
-  playerOverlay.className = "full-page-player hidden"
-  playerOverlay.innerHTML = `
-    <div class="player-header">
-      <div class="player-title">
-        <h3 id="player-movie-title">${currentMovie?.title || "Movie Player"}</h3>
-        <span id="player-episode-info"></span>
-      </div>
-      <div class="player-controls-top">
-        <button onclick="togglePlayerFullscreen()" class="control-btn fullscreen-btn" title="Toggle Fullscreen">
-          <i class="fas fa-expand"></i>
-        </button>
-        <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close Player">
+  // Create the video player popup
+  const playerPopup = document.createElement("div")
+  playerPopup.id = "video-player-popup"
+  playerPopup.className = "video-player-popup hidden"
+  playerPopup.innerHTML = `
+    <div class="player-overlay" onclick="closeVideoPlayer()"></div>
+    <div class="player-container">
+      <div class="player-header">
+        <div class="player-title">
+          <h3 id="popup-movie-title">Video Player</h3>
+          <span id="popup-episode-info"></span>
+        </div>
+        <button onclick="closeVideoPlayer()" class="close-btn">
           <i class="fas fa-times"></i>
         </button>
       </div>
-    </div>
-    
-    <div class="player-content">
-      <div class="video-container" id="video-container">
-        <div class="video-loading">
-          <div class="loading-spinner"></div>
-          <p>Loading video...</p>
+      <div class="player-content">
+        <div class="video-frame" id="video-frame">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading video...</p>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="player-footer">
-      <div class="player-info">
-        <span class="player-tip">Press ESC to close • Click outside to close</span>
       </div>
     </div>
   `
 
-  // Add click outside to close functionality
-  playerOverlay.addEventListener("click", (e) => {
-    if (e.target === playerOverlay) {
-      closeFullPagePlayer()
-    }
-  })
-
-  document.body.appendChild(playerOverlay)
+  document.body.appendChild(playerPopup)
 }
 
-function openFullPagePlayer() {
-  console.log("Opening full page player...")
-  console.log("Current embed code:", window.currentEmbedCode)
+function openVideoPlayer() {
+  console.log("Opening video player...")
 
   if (!window.currentEmbedCode) {
     showToast("Video not available", "error")
-    console.error("No embed code available")
     return
   }
 
-  const player = document.getElementById("full-page-player")
-  const videoContainer = document.getElementById("video-container")
-  const playerTitle = document.getElementById("player-movie-title")
-  const episodeInfo = document.getElementById("player-episode-info")
+  const popup = document.getElementById("video-player-popup")
+  const videoFrame = document.getElementById("video-frame")
+  const movieTitle = document.getElementById("popup-movie-title")
+  const episodeInfo = document.getElementById("popup-episode-info")
 
-  if (!player || !videoContainer) {
-    console.error("Player elements not found")
-    showToast("Player not initialized", "error")
+  if (!popup || !videoFrame) {
+    console.error("Video player elements not found")
     return
   }
 
-  // Update player title
+  // Update title
   if (currentEpisode !== null && currentMovie.multipleDownloads) {
     const episode = currentMovie.multipleDownloads[currentEpisode]
-    playerTitle.textContent = currentMovie.title
+    movieTitle.textContent = currentMovie.title
     episodeInfo.textContent = episode.label
   } else {
-    playerTitle.textContent = currentMovie.title
+    movieTitle.textContent = currentMovie.title
     episodeInfo.textContent = ""
   }
 
-  // Show loading state
-  videoContainer.innerHTML = `
-    <div class="video-loading">
-      <div class="loading-spinner"></div>
-      <p>Loading video player...</p>
-    </div>
-  `
-
-  // Show player immediately
-  player.classList.remove("hidden")
+  // Show popup
+  popup.classList.remove("hidden")
   isFullPagePlayer = true
   document.body.style.overflow = "hidden"
 
-  // Process and load the embed code
+  // Load video
   setTimeout(() => {
-    try {
-      let processedEmbedCode = window.currentEmbedCode.trim()
+    loadVideoIntoFrame()
+  }, 300)
+}
 
-      // Extract iframe from embed code if it's wrapped in other HTML
-      const iframeMatch = processedEmbedCode.match(/<iframe[^>]*>.*?<\/iframe>/i)
-      if (iframeMatch) {
-        processedEmbedCode = iframeMatch[0]
+function loadVideoIntoFrame() {
+  const videoFrame = document.getElementById("video-frame")
+
+  try {
+    let embedCode = window.currentEmbedCode.trim()
+
+    // Extract iframe if wrapped in other HTML
+    const iframeMatch = embedCode.match(/<iframe[^>]*>.*?<\/iframe>/i)
+    if (iframeMatch) {
+      embedCode = iframeMatch[0]
+    }
+
+    // Create temporary div to parse iframe
+    const tempDiv = document.createElement("div")
+    tempDiv.innerHTML = embedCode
+    const iframe = tempDiv.querySelector("iframe")
+
+    if (!iframe) {
+      throw new Error("No iframe found in embed code")
+    }
+
+    // Get and enhance the iframe src
+    let src = iframe.src || iframe.getAttribute("data-src")
+    if (!src) {
+      throw new Error("No src found in iframe")
+    }
+
+    // Add autoplay and other parameters
+    if (src.includes("youtube.com") || src.includes("youtu.be")) {
+      if (!src.includes("autoplay=")) {
+        src += (src.includes("?") ? "&" : "?") + "autoplay=1&mute=0&controls=1&rel=0"
       }
-
-      // Create a temporary div to parse the iframe
-      const tempDiv = document.createElement("div")
-      tempDiv.innerHTML = processedEmbedCode
-      const iframe = tempDiv.querySelector("iframe")
-
-      if (!iframe) {
-        throw new Error("No iframe found in embed code")
+    } else if (src.includes("vimeo.com")) {
+      if (!src.includes("autoplay=")) {
+        src += (src.includes("?") ? "&" : "?") + "autoplay=1&muted=0&controls=1"
       }
-
-      // Get the original src
-      let src = iframe.src || iframe.getAttribute("data-src")
-      if (!src) {
-        throw new Error("No src found in iframe")
+    } else {
+      if (!src.includes("autoplay")) {
+        src += (src.includes("?") ? "&" : "?") + "autoplay=1&controls=1"
       }
+    }
 
-      // Enhance iframe attributes for better playback
-      iframe.setAttribute("width", "100%")
-      iframe.setAttribute("height", "100%")
-      iframe.setAttribute("frameborder", "0")
-      iframe.setAttribute("allowfullscreen", "true")
-      iframe.setAttribute("webkitallowfullscreen", "true")
-      iframe.setAttribute("mozallowfullscreen", "true")
-      iframe.setAttribute(
-        "allow",
-        "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share",
-      )
-      iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin")
-      iframe.setAttribute("sandbox", "allow-same-origin allow-scripts allow-popups allow-forms allow-presentation")
+    // Create new iframe with proper attributes
+    const newIframe = document.createElement("iframe")
+    newIframe.src = src
+    newIframe.width = "100%"
+    newIframe.height = "100%"
+    newIframe.frameBorder = "0"
+    newIframe.allowFullscreen = true
+    newIframe.setAttribute("webkitallowfullscreen", "true")
+    newIframe.setAttribute("mozallowfullscreen", "true")
+    newIframe.setAttribute(
+      "allow",
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture",
+    )
+    newIframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin")
 
-      // Add autoplay parameter to src if not present
-      if (src.includes("youtube.com") || src.includes("youtu.be")) {
-        if (!src.includes("autoplay=")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&mute=0&controls=1&rel=0&modestbranding=1"
-        }
-      } else if (src.includes("vimeo.com")) {
-        if (!src.includes("autoplay=")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&muted=0&controls=1"
-        }
-      } else {
-        // For other embed sources, try to add common autoplay parameters
-        if (!src.includes("autoplay")) {
-          src += (src.includes("?") ? "&" : "?") + "autoplay=1&controls=1"
-        }
-      }
+    // Clear loading and add iframe
+    videoFrame.innerHTML = ""
+    videoFrame.appendChild(newIframe)
 
-      iframe.src = src
+    // Add load event listener
+    newIframe.onload = () => {
+      console.log("Video loaded successfully")
+      showToast("Video loaded", "success")
+    }
 
-      // Style the iframe
-      iframe.style.cssText = `
-        width: 100% !important;
-        height: 100% !important;
-        border: none !important;
-        border-radius: 12px !important;
-        background: #000 !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
-      `
-
-      // Create the video container with enhanced styling
-      videoContainer.innerHTML = `
-        <div class="embedded-video-container">
-          <div class="video-wrapper">
-            ${iframe.outerHTML}
-          </div>
-          <div class="video-overlay" id="video-overlay">
-            <div class="video-info">
-              <h4>${currentMovie.title}</h4>
-              ${
-                currentEpisode !== null && currentMovie.multipleDownloads
-                  ? `<p>${currentMovie.multipleDownloads[currentEpisode].label}</p>`
-                  : ""
-              }
-            </div>
-          </div>
-        </div>
-      `
-
-      // Add load event listeners
-      const newIframe = videoContainer.querySelector("iframe")
-      if (newIframe) {
-        newIframe.onload = () => {
-          console.log("Video iframe loaded successfully")
-          showToast("Video loaded successfully", "success")
-
-          // Hide overlay after a short delay
-          setTimeout(() => {
-            const overlay = document.getElementById("video-overlay")
-            if (overlay) {
-              overlay.style.opacity = "0"
-              setTimeout(() => (overlay.style.display = "none"), 300)
-            }
-          }, 2000)
-        }
-
-        newIframe.onerror = () => {
-          console.error("Video iframe failed to load")
-          showToast("Failed to load video", "error")
-          videoContainer.innerHTML = `
-            <div class="video-error">
-              <i class="fas fa-exclamation-triangle"></i>
-              <h3>Video Unavailable</h3>
-              <p>The video could not be loaded. Please try again later.</p>
-              <button onclick="closeFullPagePlayer()" class="retry-btn">Close Player</button>
-            </div>
-          `
-        }
-
-        // Try to focus on iframe for better user experience
-        setTimeout(() => {
-          try {
-            newIframe.focus()
-          } catch (e) {
-            console.log("Could not focus iframe:", e)
-          }
-        }, 1000)
-      }
-    } catch (error) {
-      console.error("Error processing embed code:", error)
-      showToast("Error loading video player", "error")
-      videoContainer.innerHTML = `
-        <div class="video-error">
+    newIframe.onerror = () => {
+      console.error("Video failed to load")
+      showToast("Failed to load video", "error")
+      videoFrame.innerHTML = `
+        <div class="error-state">
           <i class="fas fa-exclamation-triangle"></i>
-          <h3>Player Error</h3>
-          <p>There was an error loading the video player.</p>
-          <button onclick="closeFullPagePlayer()" class="retry-btn">Close Player</button>
+          <p>Failed to load video</p>
+          <button onclick="closeVideoPlayer()" class="retry-btn">Close</button>
         </div>
       `
     }
-  }, 500)
-
-  console.log("Full page player opened")
-}
-
-function closeFullPagePlayer() {
-  console.log("Closing full page player...")
-
-  const player = document.getElementById("full-page-player")
-  if (player) {
-    // Add closing animation
-    player.style.opacity = "0"
-    player.style.transform = "scale(0.95)"
-
-    setTimeout(() => {
-      player.classList.add("hidden")
-      player.style.opacity = "1"
-      player.style.transform = "scale(1)"
-      isFullPagePlayer = false
-      document.body.style.overflow = "auto"
-
-      // Clear video content to stop playback
-      const videoContainer = document.getElementById("video-container")
-      if (videoContainer) {
-        videoContainer.innerHTML = `
-          <div class="video-loading">
-            <div class="loading-spinner"></div>
-            <p>Loading video...</p>
-          </div>
-        `
-      }
-    }, 200)
+  } catch (error) {
+    console.error("Error loading video:", error)
+    showToast("Error loading video", "error")
+    videoFrame.innerHTML = `
+      <div class="error-state">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p>Error loading video</p>
+        <button onclick="closeVideoPlayer()" class="retry-btn">Close</button>
+      </div>
+    `
   }
 }
 
-function togglePlayerFullscreen() {
-  const player = document.getElementById("full-page-player")
-  const fullscreenBtn = player.querySelector(".fullscreen-btn i")
+function closeVideoPlayer() {
+  console.log("Closing video player...")
 
-  if (!document.fullscreenElement) {
-    player
-      .requestFullscreen()
-      .then(() => {
-        fullscreenBtn.classList.remove("fa-expand")
-        fullscreenBtn.classList.add("fa-compress")
-      })
-      .catch((err) => {
-        console.log("Error attempting to enable fullscreen:", err)
-      })
-  } else {
-    document.exitFullscreen().then(() => {
-      fullscreenBtn.classList.remove("fa-compress")
-      fullscreenBtn.classList.add("fa-expand")
-    })
+  const popup = document.getElementById("video-player-popup")
+  const videoFrame = document.getElementById("video-frame")
+
+  if (popup) {
+    popup.classList.add("hidden")
+    isFullPagePlayer = false
+    document.body.style.overflow = "auto"
+
+    // Clear video to stop playback
+    if (videoFrame) {
+      videoFrame.innerHTML = `
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading video...</p>
+        </div>
+      `
+    }
   }
 }
 
 // Keyboard shortcuts
 document.addEventListener("keydown", (e) => {
-  if (!isFullPagePlayer) return
-
-  switch (e.key) {
-    case "Escape":
-      closeFullPagePlayer()
-      break
+  if (isFullPagePlayer && e.key === "Escape") {
+    closeVideoPlayer()
   }
 })
 
@@ -958,8 +851,4 @@ function toggleSearch() {
 // Global error handler
 window.addEventListener("error", (e) => {
   console.error("JavaScript error:", e.error)
-  if (e.error && e.error.message && e.error.message.includes("openFullPagePlayer")) {
-    showToast("Error opening video player", "error")
-  }
 })
-
