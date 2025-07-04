@@ -22,6 +22,9 @@ const moviesData = [
     isFeatured: true,
     isNew: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/9729b9572899b0fe/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/9729b9572899b0fe/",
   },
   {
     id: "2",
@@ -43,6 +46,9 @@ const moviesData = [
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/d523df2f71926118/D%C3%ACdi_(2024)_(NetNaija.xyz).mkv",
     isNew: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/d523df2f71926118/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/d523df2f71926118/",
   },
   {
     id: "3",
@@ -63,6 +69,9 @@ const moviesData = [
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/b4ba3ec4cd6566e0/Lady_Scorpions_(2024)_(NetNaija.xyz).mkv",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/b4ba3ec4cd6566e0/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/b4ba3ec4cd6566e0/",
   },
   {
     id: "4",
@@ -83,6 +92,9 @@ const moviesData = [
     country: "South Korea",
     language: "Korean",
     downloadUrl: "https://netnaijafiles.xyz/1c7d9610ecc99340/While_You_Were_Sleeping_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/1c7d9610ecc99340/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/1c7d9610ecc99340/",
   },
   {
     id: "5",
@@ -102,6 +114,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/532898988bebc2dc/The_Good_Half_(2023)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/532898988bebc2dc/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/532898988bebc2dc/",
   },
   {
     id: "6",
@@ -122,11 +137,11 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/0e91dec87ca03aef/Trap_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt3825788" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt3825788",
     isFeatured: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/0e91dec87ca03aef/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/0e91dec87ca03aef/",
   },
   {
     id: "7",
@@ -146,10 +161,10 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/246e0d453cb2f29b/Borderlands_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt4978420" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt4978420",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/246e0d453cb2f29b/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/246e0d453cb2f29b/",
   },
   {
     id: "8",
@@ -169,11 +184,11 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/21a58a24f55d5b92/Inside_Out_2_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt22022452" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt22022452",
     isFeatured: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/21a58a24f55d5b92/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/21a58a24f55d5b92/",
   },
   {
     id: "9",
@@ -193,6 +208,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/6a6ab0e23be34978/First_Shift_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/6a6ab0e23be34978/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/6a6ab0e23be34978/",
   },
   {
     id: "10",
@@ -212,6 +230,9 @@ const moviesData = [
     country: "Canada",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/d9a1db4587d0c91d/Out_Come_the_Wolves_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/d9a1db4587d0c91d/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/d9a1db4587d0c91d/",
   },
   {
     id: "11",
@@ -231,6 +252,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/ef1bb9ef0fa7f68c/Freedom_Hair_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/ef1bb9ef0fa7f68c/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/ef1bb9ef0fa7f68c/",
   },
   {
     id: "12",
@@ -251,6 +275,9 @@ const moviesData = [
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/6a5c8600f0c9a9ea/The_Deliverance_(2024)_(NetNaija.xyz).mkv",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/6a5c8600f0c9a9ea/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/6a5c8600f0c9a9ea/",
   },
   {
     id: "13",
@@ -270,6 +297,9 @@ const moviesData = [
     country: "China",
     language: "Chinese",
     downloadUrl: "https://netnaijafiles.xyz/891b61cc660965c0/A_Legend_(2024)_(NetNaija.xyz).mp4",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/891b61cc660965c0/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/891b61cc660965c0/",
   },
   {
     id: "14",
@@ -289,6 +319,9 @@ const moviesData = [
     country: "India",
     language: "Telugu",
     downloadUrl: "https://netnaijafiles.xyz/54ba7af8a2d9234d/Buddy_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/54ba7af8a2d9234d/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/54ba7af8a2d9234d/",
   },
   {
     id: "15",
@@ -308,6 +341,9 @@ const moviesData = [
     country: "India",
     language: "Hindi",
     downloadUrl: "https://netnaijafiles.xyz/021f4c6e18a49231/Bad_Newz_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/021f4c6e18a49231/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/021f4c6e18a49231/",
   },
   {
     id: "16",
@@ -327,6 +363,9 @@ const moviesData = [
     country: "Romania",
     language: "Romanian",
     downloadUrl: "https://netnaijafiles.xyz/338f16e04a980fba/Buzz_House_The_Movie_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/338f16e04a980fba/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/338f16e04a980fba/",
   },
   {
     id: "17",
@@ -347,6 +386,9 @@ const moviesData = [
     language: "Korean",
     downloadUrl: "https://netnaijafiles.xyz/7289f1494d403738/Escape_(2024)_(NetNaija.xyz).mkv",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/7289f1494d403738/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/7289f1494d403738/",
   },
   {
     id: "18",
@@ -368,6 +410,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/46273e4b1b280fc9/Harold_and_the_Purple_Crayon_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/46273e4b1b280fc9/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/46273e4b1b280fc9/",
   },
   {
     id: "19",
@@ -387,6 +432,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/ca1387a98264019a/Ride_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/ca1387a98264019a/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/ca1387a98264019a/",
   },
   {
     id: "20",
@@ -406,6 +454,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/f779eaebd39a5a60/Someone_Like_You_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/f779eaebd39a5a60/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/f779eaebd39a5a60/",
   },
   {
     id: "21",
@@ -425,6 +476,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/e8aaab26518bdf8e/Adam_Sandler_Love_You_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/e8aaab26518bdf8e/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/e8aaab26518bdf8e/",
   },
   {
     id: "22",
@@ -444,6 +498,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/c7c8aed7876d3b84/The_Lockdown_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/c7c8aed7876d3b84/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/c7c8aed7876d3b84/",
   },
   {
     id: "23",
@@ -463,6 +520,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/83ffb52e3b08a902/Running_on_Empty_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/83ffb52e3b08a902/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/83ffb52e3b08a902/",
   },
   {
     id: "24",
@@ -482,6 +542,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/cff4423426605ba5/Wallbanger_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/cff4423426605ba5/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/cff4423426605ba5/",
   },
   {
     id: "25",
@@ -501,10 +564,10 @@ const moviesData = [
     country: "Ireland",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/0efb4fef3368f6c4/Kinds_of_Kindness_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt13651794" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt13651794",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/0efb4fef3368f6c4/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/0efb4fef3368f6c4/",
   },
   {
     id: "26",
@@ -524,6 +587,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/b1f7102762c04550/The_Greatest_Ever_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/b1f7102762c04550/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/b1f7102762c04550/",
   },
   {
     id: "27",
@@ -546,6 +612,9 @@ const moviesData = [
     language: "English",
     downloadUrl:
       "https://netnaijafiles.xyz/17795809e5714e7f/The_Supremes_at_Earls_All-You-Can-Eat_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/17795809e5714e7f/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/17795809e5714e7f/",
   },
   {
     id: "28",
@@ -565,6 +634,9 @@ const moviesData = [
     country: "India",
     language: "Hindi",
     downloadUrl: "https://netnaijafiles.xyz/97c64f32a60bd991/Munjya_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/97c64f32a60bd991/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/97c64f32a60bd991/",
   },
   {
     id: "29",
@@ -585,6 +657,9 @@ const moviesData = [
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/741acbe829427537/Tokunbo_(2024)_(NetNaija.xyz).mkv",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/741acbe829427537/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/741acbe829427537/",
   },
   {
     id: "30",
@@ -604,10 +679,10 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/34cae48ac31704b5/The_Killer_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt27503384" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt27503384",
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/34cae48ac31704b5/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/34cae48ac31704b5/",
   },
   {
     id: "31",
@@ -626,6 +701,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/32647cc111f6b401/Incoming_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/32647cc111f6b401/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/32647cc111f6b401/",
   },
   {
     id: "32",
@@ -645,6 +723,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/69afc6a3b4dc819c/Hell_Hole_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/69afc6a3b4dc819c/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/69afc6a3b4dc819c/",
   },
   {
     id: "33",
@@ -666,6 +747,9 @@ const moviesData = [
     downloadUrl: "https://netnaijafiles.xyz/20c40b5ac33470f8/Raayan_(2024)_(NetNaija.xyz).mkv",
     isFeatured: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/20c40b5ac33470f8/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/20c40b5ac33470f8/",
   },
   {
     id: "34",
@@ -685,6 +769,9 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/278a3774d7752871/Greedy_People_(2024)_(NetNaija.xyz).mkv",
+    embedCode:
+      '<iframe src="https://strtape.tech/e/278a3774d7752871/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/278a3774d7752871/",
   },
   {
     id: "35",
@@ -704,11 +791,11 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/c0443ae209ee19e7/Longlegs_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt23468450" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt23468450",
     isFeatured: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/c0443ae209ee19e7/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/c0443ae209ee19e7/",
   },
   {
     id: "36",
@@ -728,11 +815,11 @@ const moviesData = [
     country: "India",
     language: "Telugu",
     downloadUrl: "https://netnaijafiles.xyz/159f3e0823e78f29/Kalki_2898_AD_(2024)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt12735488" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt12735488",
     isFeatured: true,
     isTrending: true,
+    embedCode:
+      '<iframe src="https://strtape.tech/e/159f3e0823e78f29/" width="800" height="600" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
+    videoUrl: "https://strtape.tech/e/159f3e0823e78f29/",
   },
   {
     id: "37",
@@ -752,9 +839,6 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://netnaijafiles.xyz/e086a8ee5d38f833/The_Wolf_of_Wall_Street_(2013)_(NetNaija.xyz).mkv",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt0993846" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt0993846",
     isFeatured: true,
   },
   {
@@ -794,9 +878,6 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://www.downloadbetter.com/YwpcEElGt63/joker-2019-netnaija-com-mp4.html",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt7286456" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt7286456",
     isFeatured: true,
     isTrending: true,
   },
@@ -819,9 +900,6 @@ const moviesData = [
     country: "United States",
     language: "English",
     downloadUrl: "https://www.downloadbetter.com/hrnTlIlCy56/the-irishman-2019-netnaija-com-mp4.html",
-    embedCode:
-      '<iframe src="https://vidsrc.xyz/embed/movie/tt1302006" width="100%" height="100%" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>',
-    videoUrl: "https://vidsrc.xyz/embed/movie/tt1302006",
     isFeatured: true,
   },
   {
