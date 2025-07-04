@@ -3,196 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Movies - CineStream</title>
-    <link rel="stylesheet" href="styles/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <title>Search Movies - CINESTREAM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-black text-white">
     <!-- Header -->
-    <header id="header" class="header">
-        <div class="container">
-            <div class="header-content">
-                <div class="header-left">
-                    <button id="back-btn" class="back-btn">
-                        <i data-lucide="arrow-left"></i>
+    <header id="header" class="fixed top-0 z-50 w-full transition-all duration-300 bg-black/95 backdrop-blur-xl border-b border-gray-800">
+        <div class="container mx-auto px-4 md:px-6">
+            <div class="flex h-16 items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 md:hidden">
+                        <i class="fas fa-arrow-left"></i>
                     </button>
-                    <a href="index.html" class="logo">
-                        <div class="logo-text">CINESTREAM</div>
+                    <a href="index.html" class="flex items-center space-x-2">
+                        <div class="text-xl md:text-2xl lg:text-3xl font-black text-red-600">CINESTREAM</div>
                     </a>
-                    <h1 id="page-title" class="page-title">Search</h1>
+                    <h1 class="text-lg font-semibold text-white md:hidden">Search</h1>
                 </div>
 
-                <nav class="nav-desktop">
-                    <button id="back-btn-desktop" class="btn btn-ghost">
-                        <i data-lucide="arrow-left"></i>
+                <nav class="hidden md:flex items-center space-x-8">
+                    <button onclick="goBack()" class="text-white hover:text-gray-300 flex items-center space-x-2">
+                        <i class="fas fa-arrow-left"></i>
                         <span>Back</span>
                     </button>
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="movies.html" class="nav-link">Movies</a>
-                    <a href="downloads-center.html" class="nav-link">
-                        <i data-lucide="download"></i>
-                        <span>Downloads</span>
-                    </a>
-                    <a href="categories.html" class="nav-link">Categories</a>
-                    <a href="all-movies.html" class="nav-link">All Movies A-Z</a>
-                    <a href="search.html" class="nav-link active">Search</a>
-                    <a href="latest-movies.html" class="nav-link">Latest Movies</a>
+                    <a href="index.html" class="text-white hover:text-gray-300 font-medium transition-colors">Home</a>
+                    <a href="movies.html" class="text-white hover:text-gray-300 font-medium transition-colors">Movies</a>
+                    <a href="categories.html" class="text-white hover:text-gray-300 font-medium transition-colors">Categories</a>
+                    <a href="search.html" class="text-white hover:text-gray-300 font-medium transition-colors text-red-400">Search</a>
                 </nav>
 
-                <div class="header-right">
-                    <button id="mobile-menu-btn" class="mobile-menu-btn">
-                        <i data-lucide="menu"></i>
+                <div class="flex items-center space-x-2 md:space-x-4">
+                    <button class="text-white hover:text-gray-300 md:hidden" onclick="toggleMobileMenu()">
+                        <i class="fas fa-bars"></i>
                     </button>
                 </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="main search-page">
-        <div class="container">
-            <div class="search-container">
-                <h1 class="search-title">Search Movies</h1>
+    <main class="pt-16">
+        <div class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto mb-8">
+                <h1 class="text-3xl md:text-4xl font-bold mb-6 text-center text-white">Search Movies</h1>
                 
                 <!-- Search Form -->
-                <form id="search-form" class="search-form">
-                    <div class="search-input-container">
-                        <i data-lucide="search" class="search-icon"></i>
+                <div class="relative mb-4">
+                    <div class="relative">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         <input 
                             type="text" 
-                            id="search-query" 
-                            class="search-input-main" 
+                            id="search-input"
                             placeholder="Search movies, genres, actors..."
-                            autocomplete="off"
+                            class="w-full pl-10 pr-32 py-3 text-lg bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-400 focus:border-red-600 focus:ring-1 focus:ring-red-600 focus:outline-none"
                         >
-                        <div class="search-actions">
-                            <button type="button" id="filter-btn" class="btn btn-outline">
-                                <i data-lucide="filter"></i>
+                        <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex space-x-2">
+                            <button 
+                                id="filter-button"
+                                class="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm"
+                                onclick="toggleFilters()"
+                            >
+                                <i class="fas fa-filter"></i>
                             </button>
-                            <button type="submit" class="btn btn-primary">Search</button>
+                            <button 
+                                id="search-button"
+                                class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded"
+                                onclick="performSearch()"
+                            >
+                                Search
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Suggestions Dropdown -->
-                    <div id="suggestions-dropdown" class="suggestions-dropdown hidden">
-                        <div id="suggestions-content" class="suggestions-content">
-                            <!-- Suggestions will be loaded here -->
-                        </div>
+                    <!-- Search Suggestions -->
+                    <div id="search-suggestions" class="absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg z-50 hidden">
+                        <!-- Suggestions will be populated by JavaScript -->
                     </div>
-                </form>
+                </div>
 
                 <!-- Advanced Filters -->
-                <div id="advanced-filters" class="advanced-filters hidden">
-                    <div class="filters-card">
-                        <div class="filters-header">
-                            <h3>Advanced Filters</h3>
-                            <button id="clear-filters" class="btn btn-ghost">Clear All</button>
+                <div id="advanced-filters" class="bg-gray-900 border border-gray-700 rounded-lg p-6 mb-6 hidden">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-white">Advanced Filters</h3>
+                        <button onclick="clearFilters()" class="text-red-400 hover:text-red-300 text-sm">Clear All</button>
+                    </div>
+
+                    <!-- Genres -->
+                    <div class="mb-4">
+                        <label class="text-white font-medium mb-3 block">Genres</label>
+                        <div id="genre-filters" class="flex flex-wrap gap-2">
+                            <!-- Genre filters will be populated by JavaScript -->
                         </div>
+                    </div>
 
-                        <div class="filters-content">
-                            <!-- Genres -->
-                            <div class="filter-group">
-                                <label class="filter-label">Genres</label>
-                                <div id="genre-filters" class="filter-pills">
-                                    <!-- Genre pills will be loaded here -->
-                                </div>
-                            </div>
+                    <!-- Year Range -->
+                    <div class="mb-4">
+                        <label class="text-white font-medium mb-3 block">Release Year</label>
+                        <div class="flex items-center space-x-4">
+                            <input type="number" id="year-from" placeholder="From" min="1990" max="2024" class="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white w-24">
+                            <span class="text-gray-400">to</span>
+                            <input type="number" id="year-to" placeholder="To" min="1990" max="2024" class="bg-gray-800 border border-gray-600 rounded px-3 py-2 text-white w-24">
+                        </div>
+                    </div>
 
-                            <!-- Year Range -->
-                            <div class="filter-group">
-                                <label class="filter-label">Release Year: <span id="year-range-display">1990 - 2024</span></label>
-                                <div class="range-slider">
-                                    <input type="range" id="year-min" min="1990" max="2024" value="1990" class="range-input">
-                                    <input type="range" id="year-max" min="1990" max="2024" value="2024" class="range-input">
-                                </div>
-                            </div>
-
-                            <!-- Rating Range -->
-                            <div class="filter-group">
-                                <label class="filter-label">Rating: <span id="rating-range-display">0 - 10</span></label>
-                                <div class="range-slider">
-                                    <input type="range" id="rating-min" min="0" max="10" step="0.1" value="0" class="range-input">
-                                    <input type="range" id="rating-max" min="0" max="10" step="0.1" value="10" class="range-input">
-                                </div>
-                            </div>
-
-                            <!-- Quality -->
-                            <div class="filter-group">
-                                <label class="filter-label">Quality</label>
-                                <div id="quality-filters" class="filter-pills">
-                                    <!-- Quality pills will be loaded here -->
-                                </div>
-                            </div>
+                    <!-- Quality -->
+                    <div class="mb-4">
+                        <label class="text-white font-medium mb-3 block">Quality</label>
+                        <div id="quality-filters" class="flex flex-wrap gap-2">
+                            <button class="quality-filter bg-gray-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" data-quality="4K">4K</button>
+                            <button class="quality-filter bg-gray-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" data-quality="HD">HD</button>
+                            <button class="quality-filter bg-gray-700 hover:bg-red-600 text-white px-3 py-1 rounded text-sm" data-quality="CAM">CAM</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Active Filters -->
-                <div id="active-filters" class="active-filters hidden">
-                    <!-- Active filter pills will be displayed here -->
+                <div id="active-filters" class="flex flex-wrap gap-2 mb-6 hidden">
+                    <!-- Active filters will be populated by JavaScript -->
                 </div>
             </div>
 
             <!-- Search Results -->
-            <div id="search-results" class="search-results">
+            <div id="search-results">
                 <!-- Default state -->
-                <div id="search-empty" class="search-empty">
-                    <div class="empty-icon">🔍</div>
-                    <h2>Search for Movies</h2>
-                    <p>Enter a movie title, genre, or actor name to get started</p>
+                <div id="search-placeholder" class="text-center py-16">
+                    <div class="text-6xl mb-4">🔍</div>
+                    <h2 class="text-2xl font-bold text-white mb-4">Search for Movies</h2>
+                    <p class="text-gray-400">Enter a movie title, genre, or actor name to get started</p>
                 </div>
 
-                <!-- Results container -->
-                <div id="results-container" class="results-container hidden">
-                    <div id="results-header" class="results-header">
-                        <!-- Results count will be displayed here -->
+                <!-- Loading state -->
+                <div id="search-loading" class="text-center py-8 hidden">
+                    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mx-auto mb-4"></div>
+                    <div class="text-white">Searching...</div>
+                </div>
+
+                <!-- Results -->
+                <div id="search-results-container" class="hidden">
+                    <div id="search-results-header" class="mb-6">
+                        <!-- Results header will be populated by JavaScript -->
                     </div>
-                    <div id="results-grid" class="results-grid">
-                        <!-- Movie cards will be displayed here -->
+                    <div id="search-results-grid" class="movie-grid">
+                        <!-- Results will be populated by JavaScript -->
                     </div>
                 </div>
 
                 <!-- No results -->
-                <div id="no-results" class="no-results hidden">
-                    <div class="empty-icon">🔍</div>
-                    <h2>No results found</h2>
-                    <p>Try adjusting your search terms or filters</p>
+                <div id="no-results" class="text-center py-16 hidden">
+                    <div class="text-6xl mb-4">😔</div>
+                    <h2 class="text-2xl font-bold text-white mb-4">No Results Found</h2>
+                    <p class="text-gray-400">Try adjusting your search terms or filters</p>
                 </div>
             </div>
         </div>
     </main>
 
     <!-- Mobile Navigation -->
-    <nav class="mobile-nav-bottom">
-        <a href="index.html" class="mobile-nav-item">
-            <i data-lucide="home"></i>
-            <span>Home</span>
-        </a>
-        <a href="search.html" class="mobile-nav-item active">
-            <i data-lucide="search"></i>
-            <span>Search</span>
-        </a>
-        <a href="categories.html" class="mobile-nav-item">
-            <i data-lucide="grid-3x3"></i>
-            <span>Categories</span>
-        </a>
-        <a href="downloads.html" class="mobile-nav-item">
-            <i data-lucide="download"></i>
-            <span>Downloads</span>
-        </a>
-        <a href="movies.html" class="mobile-nav-item">
-            <i data-lucide="film"></i>
-            <span>Movies</span>
-        </a>
-    </nav>
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-black/95 backdrop-blur-xl border-t border-gray-800 md:hidden">
+        <div class="flex items-center justify-around py-2">
+            <a href="index.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-home mb-1"></i>
+                <span class="text-xs font-medium">Home</span>
+            </a>
+            <a href="search.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-red-500 bg-red-500/10">
+                <i class="fas fa-search mb-1"></i>
+                <span class="text-xs font-medium">Search</span>
+            </a>
+            <a href="downloads.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-download mb-1"></i>
+                <span class="text-xs font-medium">Downloads</span>
+            </a>
+            <a href="categories.html" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-th-large mb-1"></i>
+                <span class="text-xs font-medium">Categories</span>
+            </a>
+            <a href="#" class="flex flex-col items-center justify-center py-2 px-3 rounded-lg transition-all duration-200 text-gray-400 hover:text-white">
+                <i class="fas fa-user mb-1"></i>
+                <span class="text-xs font-medium">Profile</span>
+            </a>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <script src="js/data.js"></script>
-    <script src="js/utils.js"></script>
-    <script src="js/components.js"></script>
-    <script src="js/search.js"></script>
+    <script src="data.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>
