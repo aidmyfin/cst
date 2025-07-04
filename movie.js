@@ -670,6 +670,15 @@ function initializeFullPagePlayer() {
                     <span id="player-episode-info"></span>
                 </div>
                 <div class="player-controls-top">
+                    <button onclick="minimizePlayer()" class="control-btn minimize-btn" title="Minimize">
+                        <i class="fas fa-window-minimize"></i>
+                    </button>
+                    <button onclick="openInNewTab()" class="control-btn new-tab-btn" title="Open in New Tab">
+                        <i class="fas fa-external-link-alt"></i>
+                    </button>
+                    <button onclick="toggleFullscreen()" class="control-btn fullscreen-btn" title="Toggle Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
                     <button onclick="closeFullPagePlayer()" class="control-btn close-btn" title="Close">
                         <i class="fas fa-times"></i>
                     </button>
@@ -681,6 +690,38 @@ function initializeFullPagePlayer() {
                     <div class="video-loading">
                         <i class="fas fa-spinner fa-spin"></i>
                         <p>Loading video...</p>
+                    </div>
+                </div>
+                <div class="player-controls-bottom" id="player-controls">
+                    <div class="control-group">
+                        <button onclick="togglePlayPause()" class="control-btn play-pause-btn" title="Play/Pause">
+                            <i class="fas fa-play" id="play-pause-icon"></i>
+                        </button>
+                        <div class="volume-control">
+                            <button onclick="toggleMute()" class="control-btn volume-btn" title="Mute/Unmute">
+                                <i class="fas fa-volume-up" id="volume-icon"></i>
+                            </button>
+                            <input type="range" class="volume-slider" min="0" max="100" value="100" onchange="setVolume(this.value)">
+                        </div>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                        <div class="time-display">
+                            <span id="current-time">00:00</span> / <span id="total-time">00:00</span>
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <button onclick="changePlaybackSpeed()" class="control-btn speed-btn" title="Playback Speed">
+                            <span id="speed-text">1x</span>
+                        </button>
+                        <button onclick="togglePictureInPicture()" class="control-btn pip-btn" title="Picture in Picture">
+                            <i class="fas fa-clone"></i>
+                        </button>
+                        <button onclick="toggleFullscreen()" class="control-btn fullscreen-btn" title="Fullscreen">
+                            <i class="fas fa-expand" id="fullscreen-icon"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -739,6 +780,9 @@ function openFullPagePlayer() {
   isFullPagePlayer = true
   document.body.style.overflow = "hidden"
 
+  // Initialize player controls
+  initializePlayerControls()
+
   showToast("Video loaded successfully", "success")
 }
 
@@ -750,7 +794,166 @@ function closeFullPagePlayer() {
     player.classList.add("hidden")
     isFullPagePlayer = false
     document.body.style.overflow = "auto"
+
+    // Reset fullscreen if active
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+    }
   }
+}
+
+function minimizePlayer() {
+  const player = document.getElementById("full-page-player")
+  if (player) {
+    player.classList.add("minimized")
+    showToast("Player minimized", "info")
+  }
+}
+
+function openInNewTab() {
+  let videoUrl = window.currentVideoUrl
+
+  if (window.currentEmbedCode) {
+    // Extract URL from iframe if possible
+    const iframeMatch = window.currentEmbedCode.match(/src="([^"]+)"/)
+    if (iframeMatch) {
+      videoUrl = iframeMatch[1]
+    }
+  }
+
+  if (videoUrl) {
+    window.open(videoUrl, "_blank")
+    showToast("Video opened in new tab", "success")
+  } else {
+    showToast("Cannot open video in new tab", "error")
+  }
+}
+
+function toggleFullscreen() {
+  const player = document.getElementById("full-page-player")
+  const fullscreenIcon = document.getElementById("fullscreen-icon")
+
+  if (!document.fullscreenElement) {
+    player
+      .requestFullscreen()
+      .then(() => {
+        fullscreenIcon.classList.remove("fa-expand")
+        fullscreenIcon.classList.add("fa-compress")
+      })
+      .catch((err) => {
+        console.error("Error attempting to enable fullscreen:", err)
+      })
+  } else {
+    document.exitFullscreen().then(() => {
+      fullscreenIcon.classList.remove("fa-compress")
+      fullscreenIcon.classList.add("fa-expand")
+    })
+  }
+}
+
+function togglePlayPause() {
+  const iframe = document.querySelector("#video-container iframe")
+  const playPauseIcon = document.getElementById("play-pause-icon")
+
+  if (iframe) {
+    // Try to communicate with iframe for play/pause
+    try {
+      iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*")
+
+      if (playPauseIcon.classList.contains("fa-play")) {
+        playPauseIcon.classList.remove("fa-play")
+        playPauseIcon.classList.add("fa-pause")
+        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', "*")
+      } else {
+        playPauseIcon.classList.remove("fa-pause")
+        playPauseIcon.classList.add("fa-play")
+        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', "*")
+      }
+    } catch (e) {
+      showToast("Play/Pause control not available for this video", "warning")
+    }
+  }
+}
+
+function toggleMute() {
+  const volumeIcon = document.getElementById("volume-icon")
+  const volumeSlider = document.querySelector(".volume-slider")
+
+  if (volumeIcon.classList.contains("fa-volume-up") || volumeIcon.classList.contains("fa-volume-down")) {
+    volumeIcon.className = "fas fa-volume-mute"
+    volumeSlider.value = 0
+  } else {
+    volumeIcon.className = "fas fa-volume-up"
+    volumeSlider.value = 100
+  }
+}
+
+function setVolume(value) {
+  const volumeIcon = document.getElementById("volume-icon")
+
+  if (value == 0) {
+    volumeIcon.className = "fas fa-volume-mute"
+  } else if (value < 50) {
+    volumeIcon.className = "fas fa-volume-down"
+  } else {
+    volumeIcon.className = "fas fa-volume-up"
+  }
+}
+
+let currentSpeed = 1
+const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2]
+
+function changePlaybackSpeed() {
+  const speedText = document.getElementById("speed-text")
+  const currentIndex = speeds.indexOf(currentSpeed)
+  const nextIndex = (currentIndex + 1) % speeds.length
+  currentSpeed = speeds[nextIndex]
+  speedText.textContent = `${currentSpeed}x`
+
+  showToast(`Playback speed: ${currentSpeed}x`, "info")
+}
+
+function togglePictureInPicture() {
+  const video = document.querySelector("#video-container video")
+
+  if (video && document.pictureInPictureEnabled) {
+    if (document.pictureInPictureElement) {
+      document.exitPictureInPicture()
+    } else {
+      video.requestPictureInPicture().catch((err) => {
+        showToast("Picture-in-Picture not supported", "warning")
+      })
+    }
+  } else {
+    showToast("Picture-in-Picture not available for this video", "warning")
+  }
+}
+
+function initializePlayerControls() {
+  // Initialize any additional player control functionality
+  const player = document.getElementById("full-page-player")
+
+  // Auto-hide controls
+  let controlsTimeout
+  const controls = document.getElementById("player-controls")
+
+  function showControls() {
+    controls.classList.remove("hidden")
+    clearTimeout(controlsTimeout)
+    controlsTimeout = setTimeout(() => {
+      controls.classList.add("hidden")
+    }, 3000)
+  }
+
+  function hideControls() {
+    controls.classList.add("hidden")
+  }
+
+  player.addEventListener("mousemove", showControls)
+  player.addEventListener("mouseleave", hideControls)
+
+  // Show controls initially
+  showControls()
 }
 
 // Keyboard shortcuts
@@ -760,6 +963,23 @@ document.addEventListener("keydown", (e) => {
   switch (e.key) {
     case "Escape":
       closeFullPagePlayer()
+      break
+    case " ":
+    case "k":
+      e.preventDefault()
+      togglePlayPause()
+      break
+    case "f":
+      e.preventDefault()
+      toggleFullscreen()
+      break
+    case "m":
+      e.preventDefault()
+      toggleMute()
+      break
+    case "p":
+      e.preventDefault()
+      togglePictureInPicture()
       break
   }
 })
