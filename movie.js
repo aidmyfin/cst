@@ -20,33 +20,17 @@ function showError(message) {
 
 function showToast(message, type = "info") {
   const toast = document.createElement("div")
-  toast.className = `fixed top-20 right-4 z-50 px-6 py-3 rounded-lg text-white font-medium transition-all duration-300 transform translate-x-full`
-
-  switch (type) {
-    case "success":
-      toast.classList.add("bg-green-600")
-      break
-    case "error":
-      toast.classList.add("bg-red-600")
-      break
-    case "warning":
-      toast.classList.add("bg-yellow-600")
-      break
-    default:
-      toast.classList.add("bg-blue-600")
-  }
-
+  toast.className = `toast toast-${type}`
   toast.textContent = message
+
   document.body.appendChild(toast)
 
-  // Animate in
   setTimeout(() => {
-    toast.classList.remove("translate-x-full")
+    toast.classList.add("show")
   }, 100)
 
-  // Animate out and remove
   setTimeout(() => {
-    toast.classList.add("translate-x-full")
+    toast.classList.remove("show")
     setTimeout(() => {
       if (document.body.contains(toast)) {
         document.body.removeChild(toast)
@@ -71,23 +55,38 @@ function toggleMobileMenu() {
   const menu = document.getElementById("mobile-menu")
   const icon = document.getElementById("mobile-menu-icon")
 
-  if (menu.classList.contains("hidden")) {
-    menu.classList.remove("hidden")
-    icon.classList.remove("fa-bars")
-    icon.classList.add("fa-times")
-  } else {
-    menu.classList.add("hidden")
-    icon.classList.remove("fa-times")
-    icon.classList.add("fa-bars")
+  if (menu && icon) {
+    if (menu.classList.contains("hidden")) {
+      menu.classList.remove("hidden")
+      icon.classList.remove("fa-bars")
+      icon.classList.add("fa-times")
+    } else {
+      menu.classList.add("hidden")
+      icon.classList.remove("fa-times")
+      icon.classList.add("fa-bars")
+    }
   }
 }
 
 // Initialize page
 document.addEventListener("DOMContentLoaded", () => {
   console.log("DOM loaded, initializing movie page...")
-  initializeMoviePage()
+
+  // Wait for data to be loaded
+  if (window.movieData) {
+    initializeMoviePage()
+  } else {
+    // Wait for data to load
+    const checkData = setInterval(() => {
+      if (window.movieData) {
+        clearInterval(checkData)
+        initializeMoviePage()
+      }
+    }, 100)
+  }
+
   initializeTabs()
-  initializeFullPagePlayer()
+  initializeVideoPlayer()
 })
 
 function initializeMoviePage() {
@@ -98,7 +97,7 @@ function initializeMoviePage() {
 
   if (!slug) {
     console.error("No slug parameter found")
-    showError("Movie not found")
+    showError("Movie not found - No slug provided")
     return
   }
 
@@ -109,18 +108,28 @@ function initializeMoviePage() {
     return
   }
 
+  // Get movie by slug
   currentMovie = window.movieData.getMovieBySlug(slug)
   console.log("Found movie:", currentMovie)
 
   if (!currentMovie) {
     console.error("Movie not found for slug:", slug)
-    showError("Movie not found")
+    console.log(
+      "Available movies:",
+      window.movieData.getAllMovies().map((m) => ({ title: m.title, slug: m.slug })),
+    )
+    showError(`Movie not found for slug: ${slug}`)
     return
   }
 
   // Hide loading, show content
-  document.getElementById("loading-state").classList.add("hidden")
-  document.getElementById("movie-content").classList.remove("hidden")
+  const loadingState = document.getElementById("loading-state")
+  const errorState = document.getElementById("error-state")
+  const movieContent = document.getElementById("movie-content")
+
+  if (loadingState) loadingState.classList.add("hidden")
+  if (errorState) errorState.classList.add("hidden")
+  if (movieContent) movieContent.classList.remove("hidden")
 
   // Update page title
   document.title = `${currentMovie.title} - CINESTREAM`
@@ -351,14 +360,20 @@ function switchMobileTab(tabName) {
     btn.classList.remove("bg-red-600", "text-white")
     btn.classList.add("text-gray-400")
   })
-  document.querySelector(`[data-tab="${tabName}"].tab-button`).classList.add("bg-red-600", "text-white")
-  document.querySelector(`[data-tab="${tabName}"].tab-button`).classList.remove("text-gray-400")
+  const activeBtn = document.querySelector(`[data-tab="${tabName}"].tab-button`)
+  if (activeBtn) {
+    activeBtn.classList.add("bg-red-600", "text-white")
+    activeBtn.classList.remove("text-gray-400")
+  }
 
   // Update content
   document.querySelectorAll(".tab-content").forEach((content) => {
     content.classList.add("hidden")
   })
-  document.getElementById(`${tabName}-tab`).classList.remove("hidden")
+  const activeContent = document.getElementById(`${tabName}-tab`)
+  if (activeContent) {
+    activeContent.classList.remove("hidden")
+  }
 }
 
 function switchDesktopTab(tabName) {
@@ -367,14 +382,20 @@ function switchDesktopTab(tabName) {
     btn.classList.remove("bg-red-600", "text-white")
     btn.classList.add("text-gray-400")
   })
-  document.querySelector(`[data-tab="${tabName}"].desktop-tab-button`).classList.add("bg-red-600", "text-white")
-  document.querySelector(`[data-tab="${tabName}"].desktop-tab-button`).classList.remove("text-gray-400")
+  const activeBtn = document.querySelector(`[data-tab="${tabName}"].desktop-tab-button`)
+  if (activeBtn) {
+    activeBtn.classList.add("bg-red-600", "text-white")
+    activeBtn.classList.remove("text-gray-400")
+  }
 
   // Update content
   document.querySelectorAll(".desktop-tab-content").forEach((content) => {
     content.classList.add("hidden")
   })
-  document.getElementById(`desktop-${tabName}-tab`).classList.remove("hidden")
+  const activeContent = document.getElementById(`desktop-${tabName}-tab`)
+  if (activeContent) {
+    activeContent.classList.remove("hidden")
+  }
 }
 
 function loadOverviewTab() {
@@ -406,7 +427,8 @@ function loadOverviewTab() {
                     </div>
                     <div>
                         <span class="text-gray-400">Rating:</span>
-                        <span class="text-white ml-2">${currentMovie.rating}/10</div>
+                        <span class="text-white ml-2">${currentMovie.rating}/10</span>
+                    </div>
                     <div>
                         <span class="text-gray-400">Country:</span>
                         <span class="text-white ml-2">${currentMovie.country}</span>
@@ -640,7 +662,7 @@ function downloadEpisode(episodeIndex) {
 }
 
 // Video Player Functions
-function initializeFullPagePlayer() {
+function initializeVideoPlayer() {
   console.log("Initializing video player...")
 
   // Remove existing player if it exists
